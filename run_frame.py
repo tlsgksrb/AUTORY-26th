@@ -13,7 +13,7 @@ import numpy as np
 from frame import checks, export, plots
 from frame.config import GROUPS, MASSES, MATERIAL, RULES, TUBES, Params
 from frame.fea import Model
-from frame.geometry import build
+from frame.geometry import build, physical_tubes
 from frame.loadcases import build_cases, sprung_masses, vehicle_mass
 
 OUT = Path(__file__).parent / "output"
@@ -129,7 +129,7 @@ def main(params: Params | None = None, out: Path = OUT, figures=True):
         torsional_stiffness_Nm_per_deg=round(torsion),
         stiffness_per_mass=round(torsion / m_frame, 1),
         frame_envelope_mm={k: round(v) for k, v in dims.items()},
-        members=len(rows), nodes=len([n for n in fr.nodes if not n.startswith(("WC_", "LBJ_", "UBJ_"))]),
+        members=len(rows), physical_tubes=physical_tubes(fr), nodes=len([n for n in fr.nodes if not n.startswith(("WC_", "LBJ_", "UBJ_"))]),
         load_cases=case_rows, checks=chk, bom=bom,
         driver={k: [round(float(c), 1) for c in v] for k, v in fr.driver.items() if hasattr(v, "__len__")},
     )
@@ -142,7 +142,7 @@ def main(params: Params | None = None, out: Path = OUT, figures=True):
     write_summary_md(summary, out / "summary.md")
     if figures:
         plots.overview(fr, str(out / "frame_overview.png"),
-                       f"AUTORY 2027 e-모빌리티 프레임 v0.1 — {m_frame:.1f} kg, {torsion:.0f} N·m/deg")
+                       f"AUTORY 2027 e-모빌리티 프레임 v0.2 — {m_frame:.1f} kg, {torsion:.0f} N·m/deg")
         plots.safety_grid(fr, {k: v for k, v in results.items() if k not in ("torsion", "bending_1g")},
                           str(out / "safety_factors.png"))
     return summary
@@ -157,6 +157,8 @@ def write_summary_md(s, path):
          f"({s['stiffness_per_mass']} N·m/deg/kg)",
          f"- 차량 질량(드라이버 포함, 가정): {s['vehicle_mass_kg']} kg, 앞축 하중 {s['front_weight_pct']} %",
          f"- 무게중심 (X, Y, Z): {s['cg_mm']} mm",
+         f"- 부재: 해석 구간 {s['members']}개 = 실제 튜브 {s['physical_tubes']}개 "
+         "(굽힘 후프는 1개, 일직선으로 이어지는 레일은 1개로 계산)",
          f"- 프레임 외곽: 길이 {s['frame_envelope_mm']['length']} × 폭 {s['frame_envelope_mm']['width']} × "
          f"높이 {s['frame_envelope_mm']['height']} mm", "",
          "## 하중 조건별 결과", "",

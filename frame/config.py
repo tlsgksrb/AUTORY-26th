@@ -239,6 +239,11 @@ class Params:
     mh_head_diag: bool = True       # 메인 후프면 헤드레스트 뒤 대각(전복 횡하중)
     shb_support: bool = True        # 어깨벨트 바 지지대(후방 프레임으로)
     rear_top_diag: bool = False     # 후방 모터 베이 윗면 대각(정비성 저하)
+    # v0.2: 부재 제거 검토(모든 체크 유지)에서 빼도 된다고 나온 부재 — 기본 제외
+    cockpit_rail: bool = False      # 콕핏 레일(전방 후프 대시 높이 ~ 어깨벨트 바)
+    rear_top_cross: bool = False    # 모터 베이 상부 가로재(X 1,450)
+    rear_bulkhead_diag: bool = False  # 후방 벌크헤드 대각
+    rear_floor_diag2: bool = False  # 모터 베이 바닥 뒤쪽 대각
     cockpit_floor_x: bool = False   # 콕핏 바닥 V 대각(비틀림 기여 작음 → 기본 제외)
 
     # 서스펜션(해석용 하드포인트)

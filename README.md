@@ -1,6 +1,6 @@
 # AUTORY 26th — 2027 대학생 스마트 e-모빌리티 경진대회
 
-## 프레임 설계 v0.1
+## 프레임 설계 v0.2
 
 강관 스페이스프레임을 파라메트릭으로 생성하고, 규정 체크와 3D 골조 구조해석을 한 번에 돌리는 도구와 1차 설계안.
 
@@ -10,8 +10,9 @@
 
 | | 현재 설계안 |
 |---|---|
-| 프레임 질량 | 41.9 kg (용접·탭 10 % 포함) |
-| 비틀림 강성 | 2,186 N·m/deg |
+| 부재 수 | 실제 튜브 77개 (v0.1은 82개) |
+| 프레임 질량 | 39.3 kg (용접·탭 10 % 포함) |
+| 비틀림 강성 | 2,020 N·m/deg |
 | 휠베이스 / 윤거 | 1,550 / 1,200 · 1,150 mm |
 | 재료 | STKM13C, Ø31.8×2.0 · Ø25.4×2.3 · Ø25.4×1.6 · Ø22.2×1.2 |
 
@@ -31,6 +32,12 @@ python run_frame.py
 
 ```bash
 python tests/test_fea.py
+```
+
+부재 제거 검토(체크를 유지하면서 뺄 수 있는 부재 찾기):
+
+```bash
+python prune_study.py
 ```
 
 ## 수정 방법
@@ -68,6 +75,7 @@ frame/
   plots.py      그림
   export.py     CSV / DXF / JSON
 run_frame.py    전체 실행
+prune_study.py  부재 제거 검토
 build_viewer.py 3D 뷰어 생성 (viewer/template.html → viewer/index.html)
 tests/          해석기 검증(이론식 비교)
 docs/           설계보고서

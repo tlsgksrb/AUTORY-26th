@@ -661,18 +661,6 @@
    "od": 25.4
   },
   {
-   "a": "FH_up_L",
-   "b": "MH_sh_L",
-   "g": "SEC",
-   "od": 22.2
-  },
-  {
-   "a": "FH_up_R",
-   "b": "MH_sh_R",
-   "g": "SEC",
-   "od": 22.2
-  },
-  {
    "a": "SU_m_L",
    "b": "FH_up_L",
    "g": "SEC",
@@ -931,12 +919,6 @@
    "od": 22.2
   },
   {
-   "a": "RU_a_L",
-   "b": "RU_a_R",
-   "g": "REAR2",
-   "od": 22.2
-  },
-  {
    "a": "RL_b_L",
    "b": "RL_b_R",
    "g": "REAR",
@@ -949,20 +931,8 @@
    "od": 25.4
   },
   {
-   "a": "RL_b_L",
-   "b": "RU_b_R",
-   "g": "REAR",
-   "od": 25.4
-  },
-  {
    "a": "MH_bot_L",
    "b": "RL_a_R",
-   "g": "REAR2",
-   "od": 22.2
-  },
-  {
-   "a": "RL_a_L",
-   "b": "RL_b_R",
    "g": "REAR2",
    "od": 22.2
   },
@@ -1337,6 +1307,10 @@
   "mh_head_diag": true,
   "shb_support": true,
   "rear_top_diag": false,
+  "cockpit_rail": false,
+  "rear_top_cross": false,
+  "rear_bulkhead_diag": false,
+  "rear_floor_diag2": false,
   "cockpit_floor_x": false,
   "lbj_in": 70.0,
   "ubj_in": 90.0,
@@ -1354,10 +1328,10 @@
   "headrest_gap": 70.0
  },
  "summary": {
-  "frame_mass_kg": 41.86,
-  "torsional_stiffness_Nm_per_deg": 2186,
-  "vehicle_mass_kg": 248.9,
-  "front_weight_pct": 41.5,
+  "frame_mass_kg": 39.33,
+  "torsional_stiffness_Nm_per_deg": 2020,
+  "vehicle_mass_kg": 246.3,
+  "front_weight_pct": 41.7,
   "frame_envelope_mm": {
    "length": 2170,
    "width": 570,

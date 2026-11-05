@@ -164,7 +164,8 @@ def build(p: Params) -> Frame:
     add("FH_mid_L", "SU_m_L", "SIS"); add("SU_m_L", "MH_mid_L", "SIS")
     add("FH_bot_L", "SU_m_L", "SIS"); add("SU_m_L", "MH_bot_L", "SIS")
     add("LR_m_L", "SU_m_L", "SIS")
-    add("FH_up_L", "MH_sh_L", "SEC")                         # 콕핏 레일
+    if p.cockpit_rail:
+        add("FH_up_L", "MH_sh_L", "SEC")                     # 콕핏 레일
     add("SU_m_L", "FH_up_L", "SEC"); add("SU_m_L", "MH_sh_L", "SEC")
     # 콕핏 바닥
     cross("LR_m_L", "LAP", center="LRX_C")
@@ -196,11 +197,15 @@ def build(p: Params) -> Frame:
     add("MH_mid_L", "RU_a_L", "REAR2"); add("RU_a_L", "RU_b_L", "REAR")
     add("RL_a_L", "RU_a_L", "REAR2"); add("RL_b_L", "RU_b_L", "REAR")
     add("MH_bot_L", "RU_a_L", "REAR2"); add("RL_a_L", "RU_b_L", "REAR2")
-    cross("RL_a_L", "REAR2"); cross("RU_a_L", "REAR2")
+    cross("RL_a_L", "REAR2")
+    if p.rear_top_cross:
+        cross("RU_a_L", "REAR2")
     cross("RL_b_L", "REAR"); cross("RU_b_L", "REAR")
-    add("RL_b_L", "RU_b_R", "REAR", sym=False)              # 후방 벌크헤드 대각
+    if p.rear_bulkhead_diag:
+        add("RL_b_L", "RU_b_R", "REAR", sym=False)          # 후방 벌크헤드 대각
     add("MH_bot_L", "RL_a_R", "REAR2", sym=False)           # 후방 바닥 대각
-    add("RL_a_L", "RL_b_R", "REAR2", sym=False)
+    if p.rear_floor_diag2:
+        add("RL_a_L", "RL_b_R", "REAR2", sym=False)
     if p.rear_top_diag:
         add("RU_a_L", "RU_b_R", "REAR2", sym=False)
 
@@ -249,3 +254,35 @@ def driver_template(p: Params) -> dict:
     knee = hip + a * uu + h * n
     return dict(hip=hip, shoulder=shoulder, head=head, knee=knee, heel=heel,
                 r_hip=t["r_hip"], r_shoulder=t["r_shoulder"], r_head=t["r_head"])
+
+
+def physical_tubes(frame: Frame) -> int:
+    """실제 절단할 튜브 개수. 굽힘 후프(메인·전방)는 한 개, 노드를 일직선(3° 이내)으로
+    지나는 같은 그룹 부재는 이어진 한 개로 센다."""
+    segs = frame.frame_members()
+    parent = {m.name: m.name for m in segs}
+
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+
+    for g in ("MH", "FH"):
+        ms = [m.name for m in segs if m.group == g]
+        for x in ms[1:]:
+            parent[find(x)] = find(ms[0])
+    by_node: dict[str, list[Member]] = {}
+    for m in segs:
+        for n in (m.a, m.b):
+            by_node.setdefault(n, []).append(m)
+    for n, ms in by_node.items():
+        for i, a in enumerate(ms):
+            for b in ms[i + 1:]:
+                if a.group != b.group:
+                    continue
+                da = frame.nodes[a.b if a.a == n else a.a] - frame.nodes[n]
+                db = frame.nodes[b.b if b.a == n else b.a] - frame.nodes[n]
+                if np.dot(da, db) / (np.linalg.norm(da) * np.linalg.norm(db)) < -0.9986:
+                    parent[find(a.name)] = find(b.name)
+    return len({find(m.name) for m in segs})

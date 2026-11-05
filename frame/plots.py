@@ -30,7 +30,7 @@ def _segments(frame: Frame, include_rigid=False, disp=None, scale=1.0, model=Non
     return segs
 
 
-def _draw_2d(ax, frame, view, include_rigid=True, lw_scale=1.0):
+def _draw_2d(ax, frame, view, include_rigid=False, lw_scale=1.0):
     i, j = VIEWS[view]
     for m, a, b, g in _segments(frame, include_rigid):
         if g.rule_class == "rigid":
@@ -80,8 +80,10 @@ def _driver_2d(ax, frame):
 
 
 def _legend(fig):
-    handles = [Line2D([0], [0], color=g.color, lw=2.5,
-                      label=f"{g.name} {TUBES[g.tube].label}" if g.rule_class != "rigid" else g.name)
+    handles = [Line2D([0], [0], color=g.color, lw=2.5 if g.rule_class != "rigid" else 1,
+                      ls="-" if g.rule_class != "rigid" else "--",
+                      label=f"{g.name} {TUBES[g.tube].label}" if g.rule_class != "rigid"
+                      else "서스펜션 링크(해석용, 프레임 아님 · 등각도만 표시)")
                for g in GROUPS.values()]
     handles.append(Line2D([0], [0], color="#1a9850", lw=1.2, label="95th 드라이버 템플릿"))
     handles.append(Line2D([0], [0], color="#d73027", lw=0.8, ls="-.", label="헬멧 여유 기준선"))
