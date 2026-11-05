@@ -6,6 +6,7 @@
 
 - 설계보고서: [docs/프레임_설계보고서.md](docs/프레임_설계보고서.md)
 - 결과 요약(자동 생성): [output/summary.md](output/summary.md)
+- 3D 뷰어: `viewer/index.html` (`python build_viewer.py`로 다시 생성, 브라우저에서 바로 열림)
 
 | | 현재 설계안 |
 |---|---|
@@ -50,7 +51,7 @@ python tests/test_fea.py
 | `safety_factors.png` | 하중 조건별 부재 안전율 |
 | `*_deformed.png` | 비틀림, 메인 롤후프, 측면 충돌 변형 형상 |
 | `summary.md`, `results.json` | 질량, 강성, 하중 조건별 결과, 체크리스트, 강관 소요량 |
-| `nodes.csv` | 하드포인트 좌표 (X 뒤+, Y 왼쪽+, Z 위+, mm, 앞차축 중심·지면 원점) |
+| `nodes.csv` | 하드포인트 좌표 (X 뒤+, Y 왼쪽+, Z 위+, mm, 앞차축 중심·지면 원점). 이 축 방향은 왼손 좌표계라 CAD(오른손)로 가져오면 `_L` 노드가 오른쪽에 보인다. 좌우 대칭이라 해석에는 영향 없음 |
 | `cut_list.csv` | 부재별 규격, 중심선 길이, 질량, 양 끝 좌표 |
 | `frame_centerlines.dxf` | 3D 중심선(레이어 = 부재 그룹). CAD에서 3D 스케치로 가져와 용접 구조물 모델 생성 |
 | `frame.json` | 3D 뷰어용 데이터 |
@@ -67,6 +68,7 @@ frame/
   plots.py      그림
   export.py     CSV / DXF / JSON
 run_frame.py    전체 실행
+build_viewer.py 3D 뷰어 생성 (viewer/template.html → viewer/index.html)
 tests/          해석기 검증(이론식 비교)
 docs/           설계보고서
 ```

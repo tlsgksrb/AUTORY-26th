@@ -1,0 +1,355 @@
+<title>AUTORY 프레임 v0.1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 레이아웃: 제도판 — 크게 돌려 보는 3D 도면(왼쪽)과 표제란·데이터 시트(오른쪽 열) */
+:root{
+  --bg:#f2f4f3; --surface:#ffffff; --ink:#17201c; --muted:#5b6762; --line:#d5dcd9;
+  --accent:#2c5fd4; --canvas:#eaeeec; --grid:#d3dad7; --driver:#1d8549; --pack:#6a51a3;
+  --ok:#1d8549; --warn:#b86e00; --bad:#c2362b;
+  --sf0:#c2362b; --sf1:#e0782a; --sf2:#d9b21f; --sf3:#7cb342; --sf4:#2e7d4f;
+  --font-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --step--1:.8125rem; --step-0:.9375rem; --step-1:1.125rem; --step-2:1.5rem; --step-3:2rem;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1312; --surface:#161b19; --ink:#e3e9e6; --muted:#97a39e; --line:#2b3431;
+  --accent:#8aaaff; --canvas:#121816; --grid:#25302c; --driver:#4cc27e; --pack:#b39ddb;
+  --ok:#4cc27e; --warn:#e3a54a; --bad:#ef6a5e;
+  --sf0:#ef6a5e; --sf1:#f0954f; --sf2:#e8c547; --sf3:#9ccc65; --sf4:#4cc27e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1312; --surface:#161b19; --ink:#e3e9e6; --muted:#97a39e; --line:#2b3431;
+  --accent:#8aaaff; --canvas:#121816; --grid:#25302c; --driver:#4cc27e; --pack:#b39ddb;
+  --ok:#4cc27e; --warn:#e3a54a; --bad:#ef6a5e;
+  --sf0:#ef6a5e; --sf1:#f0954f; --sf2:#e8c547; --sf3:#9ccc65; --sf4:#4cc27e; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:var(--step-0);line-height:1.55}
+.wrap{max-width:1280px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px;border-bottom:1px solid var(--line);padding-bottom:14px}
+h1{font-size:var(--step-3);line-height:1.15;margin:0;font-weight:600;letter-spacing:-.01em;text-wrap:balance}
+h1 small{font-family:var(--font-mono);font-weight:500;font-size:var(--step-1);color:var(--accent);margin-left:.4em}
+.sub{margin:4px 0 0;color:var(--muted);max-width:62ch}
+.status{font-size:var(--step--1);color:var(--warn);border:1px solid currentColor;border-radius:4px;padding:3px 8px;white-space:nowrap}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:minmax(0,1fr)}}
+.stage{display:grid;gap:10px;min-width:0}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.seg button{font:inherit;font-size:var(--step--1);border:0;background:transparent;color:var(--ink);padding:6px 11px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:var(--step--1);border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--surface);cursor:pointer;user-select:none}
+.chip input{accent-color:var(--accent);margin:0}
+select{font:inherit;font-size:var(--step--1);padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);max-width:100%}
+button:focus-visible,select:focus-visible,.chip:focus-within,canvas:focus-visible,tr[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.canvasbox{position:relative;border:1px solid var(--line);border-radius:8px;background:var(--canvas);overflow:hidden}
+canvas{display:block;width:100%;height:min(66vh,620px);min-height:340px;touch-action:none;cursor:grab}
+@media (max-width:560px){canvas{height:300px;min-height:0}.axes{display:none}}
+.hint{position:absolute;left:10px;bottom:8px;font-size:var(--step--1);color:var(--muted);pointer-events:none}
+.axes{position:absolute;right:10px;bottom:8px;font-family:var(--font-mono);font-size:var(--step--1);color:var(--muted);pointer-events:none}
+.info{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:10px 12px;font-size:var(--step--1);min-height:44px}
+.info b{font-family:var(--font-mono);font-weight:500}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:var(--step--1);color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:18px;height:4px;border-radius:2px}
+aside{display:grid;gap:16px;min-width:0}
+.card{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:14px 16px;min-width:0}
+.card h2{font-size:var(--step--1);font-weight:600;letter-spacing:.06em;color:var(--muted);margin:0 0 10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+.stat .v{font-family:var(--font-mono);font-size:var(--step-2);font-weight:500;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .v small{font-size:var(--step--1);color:var(--muted);margin-left:3px}
+.stat .k{font-size:var(--step--1);color:var(--muted)}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:var(--step--1)}
+th,td{text-align:left;padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:500}
+td.num,th.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr[tabindex]{cursor:pointer}
+tr[tabindex]:hover td{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+tr.sel td{background:color-mix(in srgb,var(--accent) 13%,transparent)}
+.pill{display:inline-block;min-width:3.4em;text-align:center;border-radius:4px;padding:1px 6px;font-family:var(--font-mono);color:var(--surface)}
+.ng{color:var(--bad);font-weight:600}
+.okc{color:var(--ok)}
+details summary{cursor:pointer;font-size:var(--step--1);color:var(--accent)}
+.note{font-size:var(--step--1);color:var(--muted);margin:0}
+.note a{color:var(--accent)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>AUTORY 프레임<small>v0.1</small></h1>
+      <p class="sub">2027 대학생 스마트 e-모빌리티 경진대회용 STKM13C 강관 스페이스프레임 개념설계와 3D 골조 해석 결과.</p>
+    </div>
+    <span class="status">규정 원문 대조 전</span>
+  </header>
+
+  <div class="main">
+    <section class="stage" aria-label="3D 프레임">
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="시점">
+          <button id="v-iso" aria-pressed="true">등각</button>
+          <button id="v-side" aria-pressed="false">측면</button>
+          <button id="v-top" aria-pressed="false">평면</button>
+          <button id="v-front" aria-pressed="false">정면</button>
+        </div>
+        <div class="seg" role="group" aria-label="색상">
+          <button id="c-group" aria-pressed="true">부재 그룹</button>
+          <button id="c-sf" aria-pressed="false">안전율</button>
+        </div>
+        <select id="case" aria-label="하중 조건"></select>
+      </div>
+      <div class="toolbar">
+        <label class="chip"><input type="checkbox" id="t-driver" checked>드라이버 템플릿</label>
+        <label class="chip"><input type="checkbox" id="t-wheels" checked>바퀴</label>
+        <label class="chip"><input type="checkbox" id="t-pack" checked>배터리·모터</label>
+        <label class="chip"><input type="checkbox" id="t-susp">서스펜션 링크</label>
+      </div>
+      <div class="canvasbox">
+        <canvas id="cv" tabindex="0" aria-label="프레임 3D 뷰. 드래그로 회전, 휠이나 두 손가락으로 확대"></canvas>
+        <div class="hint">드래그 회전 · 두 손가락/휠 확대 · 탭하면 부재 정보</div>
+        <div class="axes">mm · X 뒤 · Z 위</div>
+      </div>
+      <div class="info" id="info">부재를 탭하면 규격, 길이, 선택한 하중 조건의 안전율이 여기에 나옵니다.</div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <aside>
+      <div class="card">
+        <h2>주요 수치</h2>
+        <div class="stats" id="stats"></div>
+      </div>
+      <div class="card">
+        <h2>하중 조건별 결과 · 행을 누르면 안전율 색상</h2>
+        <div class="tablewrap"><table id="cases"></table></div>
+      </div>
+      <div class="card">
+        <h2>체크리스트</h2>
+        <p class="note" id="chk-sum"></p>
+        <div class="tablewrap"><table id="ngtable"></table></div>
+        <details><summary>전체 항목 보기</summary><div class="tablewrap"><table id="chk"></table></div></details>
+      </div>
+      <div class="card">
+        <h2>강관 소요량 (6 m 정척, 손실 15 %)</h2>
+        <div class="tablewrap"><table id="bom"></table></div>
+      </div>
+      <div class="card">
+        <p class="note">롤후프·튜브 두께 등 핵심 기준은 KSAE 다른 부문 규정과 FSAE 관례값을 빌려 왔습니다. 2027 규정집을 받으면 값을 바꿔 다시 계산합니다. 소스와 설계보고서: <a href="https://github.com/tlsgksrb/autory-26th" target="_blank" rel="noopener">github.com/tlsgksrb/autory-26th</a></p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+const D = /*__DATA__*/null;
+const $ = s => document.querySelector(s);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmt = (v, d=0) => Number(v).toLocaleString('ko-KR', {maximumFractionDigits:d, minimumFractionDigits:d});
+
+// ---------- 데이터 준비 ----------
+const N = D.nodes;
+const xs = N.map(p=>p[0]), ys = N.map(p=>p[1]), zs = N.map(p=>p[2]);
+const T = [(Math.max(...xs)+Math.min(...xs))/2, 0, 500];
+const SPAN = Math.max(Math.max(...xs)-Math.min(...xs), Math.max(...ys)-Math.min(...ys)) + 500;
+
+const state = {yaw:-0.62, elev:0.42, zoom:1, color:'group', caseIdx:0, sel:null,
+  show:{driver:true, wheels:true, pack:true, susp:false}};
+const VIEWS = {iso:[-0.62,0.42], side:[Math.PI,0], top:[Math.PI,Math.PI/2-1e-3], front:[Math.PI/2,0.02]};
+
+const SF_BINS = [[1,'--sf0','< 1.0'],[1.5,'--sf1','1.0–1.5'],[2,'--sf2','1.5–2.0'],[4,'--sf3','2.0–4.0'],[1e9,'--sf4','≥ 4.0']];
+const sfColor = v => css(SF_BINS.find(b => v < b[0])[1]);
+
+// ---------- 투영 ----------
+const cv = $('#cv'), ctx = cv.getContext('2d');
+let W=0, H=0, DPR=1, BASE=1;
+function resize(){
+  const r = cv.getBoundingClientRect();
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = r.width; H = r.height;
+  cv.width = Math.round(W*DPR); cv.height = Math.round(H*DPR);
+  BASE = Math.min(W/(SPAN*1.1), H/1900) * (W < 560 ? 1.25 : 1);
+  draw();
+}
+function proj(p){
+  const x = p[0]-T[0], y = p[1]-T[1], z = p[2]-T[2];
+  const cy = Math.cos(state.yaw), sy = Math.sin(state.yaw);
+  const x1 = cy*x - sy*y, y1 = sy*x + cy*y;
+  const ce = Math.cos(state.elev), se = Math.sin(state.elev);
+  const depth = y1*ce - z*se, up = y1*se + z*ce;
+  const cam = SPAN*2.2, s = cam/(cam+depth), k = BASE*state.zoom*s;
+  return [W/2 + x1*k, H*0.54 - up*k, depth, k];
+}
+
+// ---------- 그리기 ----------
+function circle3(c, r, plane, n=40){
+  const pts=[];
+  for(let i=0;i<=n;i++){const a=i/n*2*Math.PI, u=Math.cos(a)*r, v=Math.sin(a)*r;
+    pts.push(plane==='xz'?[c[0]+u,c[1],c[2]+v]:[c[0],c[1]+u,c[2]+v]);}
+  return pts;
+}
+function polyline(pts, color, lw, dash){
+  ctx.beginPath(); ctx.setLineDash(dash||[]);
+  pts.forEach((p,i)=>{const q=proj(p); i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]);});
+  ctx.strokeStyle=color; ctx.lineWidth=lw; ctx.stroke(); ctx.setLineDash([]);
+}
+let segCache=[];
+function draw(){
+  if(!W) return;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.clearRect(0,0,W,H);
+  // 지면 격자
+  const g = css('--grid');
+  for(let x=-1000;x<=2200;x+=250) polyline([[x,-900,0],[x,900,0]], g, 1);
+  for(let y=-900;y<=900;y+=300) polyline([[-1000,y,0],[2200,y,0]], g, 1);
+
+  const muted = css('--muted');
+  if(state.show.wheels){
+    const w=D.wheels;
+    [[0,w.tf],[w.wb,w.tr]].forEach(([x,tr])=>[1,-1].forEach(s=>{
+      [-w.w/2,w.w/2].forEach(o=>polyline(circle3([x,s*tr/2+o,w.d/2],w.d/2,'xz'), muted, 1, [4,4]));
+    }));
+  }
+  if(state.show.pack){
+    const pc = css('--pack');
+    for(const [name,[x0,x1,z0,z1,hw]] of Object.entries(D.packaging)){
+      const c=[[x0,-hw,z0],[x1,-hw,z0],[x1,hw,z0],[x0,hw,z0],[x0,-hw,z1],[x1,-hw,z1],[x1,hw,z1],[x0,hw,z1]];
+      [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]].forEach(([a,b])=>polyline([c[a],c[b]],pc,1,[5,4]));
+      const q=proj([(x0+x1)/2,0,z1+40]); ctx.fillStyle=pc; ctx.font=`12px ${css('--font-body')}`; ctx.textAlign='center'; ctx.fillText(name,q[0],q[1]);
+    }
+  }
+  // 부재 (먼 것부터)
+  const cs = D.cases[state.caseIdx];
+  segCache = D.members.map((m,i)=>{
+    const g = D.groups[m[2]];
+    if(g.cls==='rigid' && !state.show.susp) return null;
+    const a=proj(N[m[0]]), b=proj(N[m[1]]);
+    return {i, a, b, depth:(a[2]+b[2])/2, g, rigid:g.cls==='rigid'};
+  }).filter(Boolean).sort((p,q)=>q.depth-p.depth);
+  for(const s of segCache){
+    let col = s.g.color, lw;
+    if(s.rigid){ col = muted; lw = 1; }
+    else {
+      lw = Math.max(1.2, s.g.od*(s.a[3]+s.b[3])/2*0.9);
+      if(state.color==='sf'){ const v=cs.sf[s.i]; col = v==null? muted : sfColor(v); }
+    }
+    ctx.beginPath(); ctx.setLineDash(s.rigid?[3,3]:[]);
+    ctx.moveTo(s.a[0],s.a[1]); ctx.lineTo(s.b[0],s.b[1]);
+    ctx.lineCap='round'; ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.stroke();
+    if(state.sel===s.i){ ctx.strokeStyle=css('--accent'); ctx.lineWidth=lw+5; ctx.globalAlpha=.35; ctx.stroke(); ctx.globalAlpha=1; }
+  }
+  ctx.setLineDash([]);
+  if(state.show.driver){
+    const dc = css('--driver'), dr = D.driver, R = D.radii;
+    [['hip',R.hip],['shoulder',R.shoulder],['head',R.head]].forEach(([k,r])=>polyline(circle3([dr[k][0],0,dr[k][1]],r,'xz'),dc,1.6));
+    polyline([[dr.hip[0],0,dr.hip[1]],[dr.head[0],0,dr.head[1]]],dc,1.2);
+    [-110,110].forEach(y=>polyline([[dr.hip[0],y,dr.hip[1]],[dr.knee[0],y,dr.knee[1]],[dr.heel[0],y,dr.heel[1]]],dc,1.2,[5,4]));
+    polyline(circle3([D.sw[0],0,D.sw[1]],D.sw[2],'yz'),css('--ink'),2);
+  }
+}
+
+// ---------- 상호작용 ----------
+const ptrs = new Map(); let moved=false, pinch0=null;
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId,[e.clientX,e.clientY]); moved=false;
+  if(ptrs.size===2){const [p,q]=[...ptrs.values()]; pinch0={d:Math.hypot(p[0]-q[0],p[1]-q[1]), z:state.zoom};}});
+cv.addEventListener('pointermove',e=>{
+  if(!ptrs.has(e.pointerId)) return;
+  const prev=ptrs.get(e.pointerId), dx=e.clientX-prev[0], dy=e.clientY-prev[1];
+  ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+  if(ptrs.size===2 && pinch0){const [p,q]=[...ptrs.values()]; state.zoom=Math.min(6,Math.max(.4,pinch0.z*Math.hypot(p[0]-q[0],p[1]-q[1])/pinch0.d)); moved=true;}
+  else if(ptrs.size===1){ if(Math.abs(dx)+Math.abs(dy)>0.5) moved=true;
+    state.yaw-=dx*0.008; state.elev=Math.min(Math.PI/2-1e-3,Math.max(-0.3,state.elev+dy*0.008)); setView(null);}
+  draw();
+});
+function endPtr(e){
+  if(ptrs.size===1 && !moved) pick(e);
+  ptrs.delete(e.pointerId); if(ptrs.size<2) pinch0=null;
+}
+cv.addEventListener('pointerup',endPtr); cv.addEventListener('pointercancel',e=>{ptrs.delete(e.pointerId);pinch0=null;});
+cv.addEventListener('wheel',e=>{e.preventDefault(); state.zoom=Math.min(6,Math.max(.4,state.zoom*Math.exp(-e.deltaY*0.0015))); draw();},{passive:false});
+cv.addEventListener('keydown',e=>{
+  const k={ArrowLeft:[.1,0],ArrowRight:[-.1,0],ArrowUp:[0,.08],ArrowDown:[0,-.08]}[e.key];
+  if(k){e.preventDefault(); state.yaw+=k[0]; state.elev=Math.min(Math.PI/2-1e-3,Math.max(-0.3,state.elev+k[1])); setView(null); draw();}
+  if(e.key==='+'||e.key==='='){state.zoom=Math.min(6,state.zoom*1.15);draw();}
+  if(e.key==='-'){state.zoom=Math.max(.4,state.zoom/1.15);draw();}
+});
+function pick(e){
+  const r=cv.getBoundingClientRect(), px=e.clientX-r.left, py=e.clientY-r.top;
+  let best=null, bd=14;
+  for(const s of segCache){ if(s.rigid) continue;
+    const [ax,ay]=s.a,[bx,by]=s.b, vx=bx-ax, vy=by-ay, L2=vx*vx+vy*vy||1;
+    const t=Math.max(0,Math.min(1,((px-ax)*vx+(py-ay)*vy)/L2)), d=Math.hypot(ax+t*vx-px, ay+t*vy-py);
+    if(d<bd || (best && Math.abs(d-bd)<2 && s.depth<best.depth)){bd=d;best=s;}
+  }
+  state.sel = best? best.i : null; showInfo(); draw();
+}
+function showInfo(){
+  const el=$('#info');
+  if(state.sel==null){el.textContent='부재를 탭하면 규격, 길이, 선택한 하중 조건의 안전율이 여기에 나옵니다.';return;}
+  const m=D.members[state.sel], g=D.groups[m[2]], cs=D.cases[state.caseIdx], v=cs.sf[state.sel];
+  el.innerHTML=`<b>${D.names[m[0]]} – ${D.names[m[1]]}</b> · ${g.name} · ${g.tube} · 길이 <b>${fmt(m[3])} mm</b><br>`+
+    `${cs.name}: 안전율 <b style="color:${v==null?css('--muted'):sfColor(v)}">${v==null?'—':v>=99?'≥ 99':fmt(v,2)}</b> <span style="color:var(--muted)">(항복·좌굴 중 작은 값)</span>`;
+}
+function setView(name){
+  for(const k of Object.keys(VIEWS)) $('#v-'+k).setAttribute('aria-pressed', String(k===name));
+}
+for(const k of Object.keys(VIEWS)) $('#v-'+k).addEventListener('click',()=>{[state.yaw,state.elev]=VIEWS[k]; state.zoom=1; setView(k); draw();});
+function setColor(mode){
+  state.color=mode; $('#c-group').setAttribute('aria-pressed',String(mode==='group')); $('#c-sf').setAttribute('aria-pressed',String(mode==='sf'));
+  legend(); markCase(); draw();
+}
+$('#c-group').addEventListener('click',()=>setColor('group'));
+$('#c-sf').addEventListener('click',()=>setColor('sf'));
+const sel=$('#case');
+D.cases.forEach((c,i)=>{const o=document.createElement('option'); o.value=i; o.textContent=c.name; sel.appendChild(o);});
+sel.addEventListener('change',()=>{state.caseIdx=+sel.value; setColor('sf'); showInfo();});
+for(const k of ['driver','wheels','pack','susp']) $('#t-'+k).addEventListener('change',e=>{state.show[k]=e.target.checked; draw();});
+
+function legend(){
+  const el=$('#legend');
+  if(state.color==='group'){
+    el.innerHTML=Object.values(D.groups).filter(g=>g.cls!=='rigid').map(g=>`<span><i style="background:${g.color}"></i>${g.name} ${g.tube}</span>`).join('');
+  } else {
+    el.innerHTML=`<span>${D.cases[state.caseIdx].name} 안전율</span>`+SF_BINS.map(b=>`<span><i style="background:var(${b[1]})"></i>${b[2]}</span>`).join('');
+  }
+}
+
+// ---------- 패널 ----------
+const S=D.summary;
+$('#stats').innerHTML=[
+  [fmt(S.frame_mass_kg,1),'kg','프레임 질량(용접·탭 +10 %)'],
+  [fmt(S.torsional_stiffness_Nm_per_deg),'N·m/°','비틀림 강성'],
+  [fmt(S.vehicle_mass_kg),'kg','차량 질량(드라이버 포함, 가정)'],
+  [fmt(S.front_weight_pct,1),'%','앞축 하중'],
+].map(([v,u,k])=>`<div class="stat"><div class="v">${v}<small>${u}</small></div><div class="k">${k}</div></div>`).join('');
+
+const keyToIdx = Object.fromEntries(D.cases.map((c,i)=>[c.key,i]));
+const pill = v => `<span class="pill" style="background:${sfColor(v)}">${fmt(v,2)}</span>`;
+function renderCases(){
+  $('#cases').innerHTML='<tr><th>조건</th><th class="num">변위 mm</th><th class="num">최소 안전율</th></tr>'+
+    D.load_cases.filter(r=>r.key in keyToIdx).map(r=>`<tr tabindex="0" data-k="${r.key}"><td>${r.name}<br><span style="color:var(--muted)">${r.min_sf_group}</span></td><td class="num">${fmt(r.max_disp_mm,2)}</td><td class="num">${pill(r.min_sf)}</td></tr>`).join('');
+  $('#cases').querySelectorAll('tr[data-k]').forEach(tr=>{
+    const go=()=>{state.caseIdx=keyToIdx[tr.dataset.k]; sel.value=state.caseIdx; setColor('sf'); showInfo();};
+    tr.addEventListener('click',go); tr.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});
+  });
+  markCase();
+}
+function markCase(){
+  const k=D.cases[state.caseIdx].key;
+  $('#cases').querySelectorAll('tr[data-k]').forEach(tr=>tr.classList.toggle('sel', state.color==='sf' && tr.dataset.k===k));
+}
+const ok=D.checks.filter(c=>c.ok).length, ng=D.checks.filter(c=>!c.ok);
+$('#chk-sum').innerHTML=`<span class="okc">${ok} / ${D.checks.length} 통과</span>`+(ng.length?` · <span class="ng">미달 ${ng.length}</span>`:'');
+const row=c=>`<tr><td>${c.item}</td><td class="num">${typeof c.value==='number'?fmt(c.value,1):c.value} ${c.unit}</td><td>${c.criterion}</td><td class="${c.ok?'okc':'ng'}">${c.ok?'OK':'NG'}</td></tr>`;
+$('#ngtable').innerHTML=ng.map(row).join('');
+$('#chk').innerHTML='<tr><th>항목</th><th class="num">값</th><th>기준</th><th></th></tr>'+D.checks.map(row).join('');
+$('#bom').innerHTML='<tr><th>규격</th><th class="num">개수</th><th class="num">길이 m</th><th class="num">kg</th><th class="num">정척</th></tr>'+
+  S.bom.map(b=>`<tr><td class="num" style="text-align:left">${b.tube}</td><td class="num">${b.pieces}</td><td class="num">${fmt(b.length_m,2)}</td><td class="num">${fmt(b.mass_kg,1)}</td><td class="num">${b.stock_bars_6m}</td></tr>`).join('');
+
+renderCases(); legend();
+new ResizeObserver(resize).observe(cv);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{legend();renderCases();draw();});
+new MutationObserver(()=>{legend();renderCases();draw();}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+resize();
+</script>

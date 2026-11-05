@@ -1,0 +1,355 @@
+<title>AUTORY 프레임 v0.1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 레이아웃: 제도판 — 크게 돌려 보는 3D 도면(왼쪽)과 표제란·데이터 시트(오른쪽 열) */
+:root{
+  --bg:#f2f4f3; --surface:#ffffff; --ink:#17201c; --muted:#5b6762; --line:#d5dcd9;
+  --accent:#2c5fd4; --canvas:#eaeeec; --grid:#d3dad7; --driver:#1d8549; --pack:#6a51a3;
+  --ok:#1d8549; --warn:#b86e00; --bad:#c2362b;
+  --sf0:#c2362b; --sf1:#e0782a; --sf2:#d9b21f; --sf3:#7cb342; --sf4:#2e7d4f;
+  --font-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --step--1:.8125rem; --step-0:.9375rem; --step-1:1.125rem; --step-2:1.5rem; --step-3:2rem;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1312; --surface:#161b19; --ink:#e3e9e6; --muted:#97a39e; --line:#2b3431;
+  --accent:#8aaaff; --canvas:#121816; --grid:#25302c; --driver:#4cc27e; --pack:#b39ddb;
+  --ok:#4cc27e; --warn:#e3a54a; --bad:#ef6a5e;
+  --sf0:#ef6a5e; --sf1:#f0954f; --sf2:#e8c547; --sf3:#9ccc65; --sf4:#4cc27e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1312; --surface:#161b19; --ink:#e3e9e6; --muted:#97a39e; --line:#2b3431;
+  --accent:#8aaaff; --canvas:#121816; --grid:#25302c; --driver:#4cc27e; --pack:#b39ddb;
+  --ok:#4cc27e; --warn:#e3a54a; --bad:#ef6a5e;
+  --sf0:#ef6a5e; --sf1:#f0954f; --sf2:#e8c547; --sf3:#9ccc65; --sf4:#4cc27e; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:var(--step-0);line-height:1.55}
+.wrap{max-width:1280px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px;border-bottom:1px solid var(--line);padding-bottom:14px}
+h1{font-size:var(--step-3);line-height:1.15;margin:0;font-weight:600;letter-spacing:-.01em;text-wrap:balance}
+h1 small{font-family:var(--font-mono);font-weight:500;font-size:var(--step-1);color:var(--accent);margin-left:.4em}
+.sub{margin:4px 0 0;color:var(--muted);max-width:62ch}
+.status{font-size:var(--step--1);color:var(--warn);border:1px solid currentColor;border-radius:4px;padding:3px 8px;white-space:nowrap}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:minmax(0,1fr)}}
+.stage{display:grid;gap:10px;min-width:0}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.seg button{font:inherit;font-size:var(--step--1);border:0;background:transparent;color:var(--ink);padding:6px 11px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:var(--step--1);border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--surface);cursor:pointer;user-select:none}
+.chip input{accent-color:var(--accent);margin:0}
+select{font:inherit;font-size:var(--step--1);padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);max-width:100%}
+button:focus-visible,select:focus-visible,.chip:focus-within,canvas:focus-visible,tr[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.canvasbox{position:relative;border:1px solid var(--line);border-radius:8px;background:var(--canvas);overflow:hidden}
+canvas{display:block;width:100%;height:min(66vh,620px);min-height:340px;touch-action:none;cursor:grab}
+@media (max-width:560px){canvas{height:300px;min-height:0}.axes{display:none}}
+.hint{position:absolute;left:10px;bottom:8px;font-size:var(--step--1);color:var(--muted);pointer-events:none}
+.axes{position:absolute;right:10px;bottom:8px;font-family:var(--font-mono);font-size:var(--step--1);color:var(--muted);pointer-events:none}
+.info{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:10px 12px;font-size:var(--step--1);min-height:44px}
+.info b{font-family:var(--font-mono);font-weight:500}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:var(--step--1);color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:18px;height:4px;border-radius:2px}
+aside{display:grid;gap:16px;min-width:0}
+.card{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:14px 16px;min-width:0}
+.card h2{font-size:var(--step--1);font-weight:600;letter-spacing:.06em;color:var(--muted);margin:0 0 10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+.stat .v{font-family:var(--font-mono);font-size:var(--step-2);font-weight:500;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .v small{font-size:var(--step--1);color:var(--muted);margin-left:3px}
+.stat .k{font-size:var(--step--1);color:var(--muted)}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:var(--step--1)}
+th,td{text-align:left;padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:500}
+td.num,th.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr[tabindex]{cursor:pointer}
+tr[tabindex]:hover td{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+tr.sel td{background:color-mix(in srgb,var(--accent) 13%,transparent)}
+.pill{display:inline-block;min-width:3.4em;text-align:center;border-radius:4px;padding:1px 6px;font-family:var(--font-mono);color:var(--surface)}
+.ng{color:var(--bad);font-weight:600}
+.okc{color:var(--ok)}
+details summary{cursor:pointer;font-size:var(--step--1);color:var(--accent)}
+.note{font-size:var(--step--1);color:var(--muted);margin:0}
+.note a{color:var(--accent)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>AUTORY 프레임<small>v0.1</small></h1>
+      <p class="sub">2027 대학생 스마트 e-모빌리티 경진대회용 STKM13C 강관 스페이스프레임 개념설계와 3D 골조 해석 결과.</p>
+    </div>
+    <span class="status">규정 원문 대조 전</span>
+  </header>
+
+  <div class="main">
+    <section class="stage" aria-label="3D 프레임">
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="시점">
+          <button id="v-iso" aria-pressed="true">등각</button>
+          <button id="v-side" aria-pressed="false">측면</button>
+          <button id="v-top" aria-pressed="false">평면</button>
+          <button id="v-front" aria-pressed="false">정면</button>
+        </div>
+        <div class="seg" role="group" aria-label="색상">
+          <button id="c-group" aria-pressed="true">부재 그룹</button>
+          <button id="c-sf" aria-pressed="false">안전율</button>
+        </div>
+        <select id="case" aria-label="하중 조건"></select>
+      </div>
+      <div class="toolbar">
+        <label class="chip"><input type="checkbox" id="t-driver" checked>드라이버 템플릿</label>
+        <label class="chip"><input type="checkbox" id="t-wheels" checked>바퀴</label>
+        <label class="chip"><input type="checkbox" id="t-pack" checked>배터리·모터</label>
+        <label class="chip"><input type="checkbox" id="t-susp">서스펜션 링크</label>
+      </div>
+      <div class="canvasbox">
+        <canvas id="cv" tabindex="0" aria-label="프레임 3D 뷰. 드래그로 회전, 휠이나 두 손가락으로 확대"></canvas>
+        <div class="hint">드래그 회전 · 두 손가락/휠 확대 · 탭하면 부재 정보</div>
+        <div class="axes">mm · X 뒤 · Z 위</div>
+      </div>
+      <div class="info" id="info">부재를 탭하면 규격, 길이, 선택한 하중 조건의 안전율이 여기에 나옵니다.</div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <aside>
+      <div class="card">
+        <h2>주요 수치</h2>
+        <div class="stats" id="stats"></div>
+      </div>
+      <div class="card">
+        <h2>하중 조건별 결과 · 행을 누르면 안전율 색상</h2>
+        <div class="tablewrap"><table id="cases"></table></div>
+      </div>
+      <div class="card">
+        <h2>체크리스트</h2>
+        <p class="note" id="chk-sum"></p>
+        <div class="tablewrap"><table id="ngtable"></table></div>
+        <details><summary>전체 항목 보기</summary><div class="tablewrap"><table id="chk"></table></div></details>
+      </div>
+      <div class="card">
+        <h2>강관 소요량 (6 m 정척, 손실 15 %)</h2>
+        <div class="tablewrap"><table id="bom"></table></div>
+      </div>
+      <div class="card">
+        <p class="note">롤후프·튜브 두께 등 핵심 기준은 KSAE 다른 부문 규정과 FSAE 관례값을 빌려 왔습니다. 2027 규정집을 받으면 값을 바꿔 다시 계산합니다. 소스와 설계보고서: <a href="https://github.com/tlsgksrb/autory-26th" target="_blank" rel="noopener">github.com/tlsgksrb/autory-26th</a></p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+const D = {"nodes":[[-430.0,160.0,65.0],[-430.0,-160.0,65.0],[-430.0,140.0,380.0],[-430.0,-140.0,380.0],[-430.0,0.0,65.0],[380.0,255.0,65.0],[380.0,-255.0,65.0],[380.0,255.0,330.0],[380.0,-255.0,330.0],[380.0,235.0,540.0],[380.0,-235.0,540.0],[380.0,160.0,740.0],[380.0,-160.0,740.0],[380.0,0.0,760.0],[-130.0,195.2,65.0],[-130.0,-195.2,65.0],[-130.0,182.6,361.5],[-130.0,-182.6,361.5],[130.0,225.7,65.0],[130.0,-225.7,65.0],[130.0,219.5,345.4],[130.0,-219.5,345.4],[1290.0,285.0,65.0],[1290.0,-285.0,65.0],[1290.0,285.0,330.0],[1290.0,-285.0,330.0],[1290.0,280.0,600.0],[1290.0,-280.0,600.0],[1290.0,160.0,1180.0],[1290.0,-160.0,1180.0],[1290.0,0.0,1200.0],[1290.0,95.0,600.0],[1290.0,-95.0,600.0],[770.0,267.9,65.0],[770.0,-267.9,65.0],[770.0,267.9,330.0],[770.0,-267.9,330.0],[770.0,0.0,65.0],[1450.0,250.0,65.0],[1450.0,-250.0,65.0],[1450.0,250.0,340.0],[1450.0,-250.0,340.0],[1740.0,210.0,65.0],[1740.0,-210.0,65.0],[1740.0,210.0,420.0],[1740.0,-210.0,420.0],[0.0,600.0,260.0],[0.0,-600.0,260.0],[0.0,530.0,140.0],[0.0,-530.0,140.0],[0.0,510.0,390.0],[0.0,-510.0,390.0],[1550.0,575.0,260.0],[1550.0,-575.0,260.0],[1550.0,505.0,140.0],[1550.0,-505.0,140.0],[1550.0,485.0,390.0],[1550.0,-485.0,390.0]],"names":["FB_bot_L","FB_bot_R","FB_top_L","FB_top_R","FBX_C","FH_bot_L","FH_bot_R","FH_mid_L","FH_mid_R","FH_up_L","FH_up_R","FH_top_L","FH_top_R","FH_top_C","FL_a_L","FL_a_R","FU_a_L","FU_a_R","FL_b_L","FL_b_R","FU_b_L","FU_b_R","MH_bot_L","MH_bot_R","MH_mid_L","MH_mid_R","MH_sh_L","MH_sh_R","MH_top_L","MH_top_R","MH_top_C","SH_L","SH_R","LR_m_L","LR_m_R","SU_m_L","SU_m_R","LRX_C","RL_a_L","RL_a_R","RU_a_L","RU_a_R","RL_b_L","RL_b_R","RU_b_L","RU_b_R","WC_F_L","WC_F_R","LBJ_F_L","LBJ_F_R","UBJ_F_L","UBJ_F_R","WC_R_L","WC_R_R","LBJ_R_L","LBJ_R_R","UBJ_R_L","UBJ_R_R"],"members":[[0,2,"FBH",316],[1,3,"FBH",316],[0,4,"FBH",160],[1,4,"FBH",160],[2,3,"FBH",280],[0,3,"FBH",435],[0,14,"FBS",302],[1,15,"FBS",302],[14,18,"FBS",262],[15,19,"FBS",262],[18,5,"FBS",252],[19,6,"FBS",252],[2,16,"FBS",304],[3,17,"FBS",304],[16,20,"FBS",263],[17,21,"FBS",263],[20,7,"FBS",253],[21,8,"FBS",253],[14,16,"SEC",297],[15,17,"SEC",297],[18,20,"SEC",281],[19,21,"SEC",281],[0,16,"FBS",422],[1,17,"FBS",422],[14,20,"SEC",383],[15,21,"SEC",383],[18,7,"FBS",365],[19,8,"FBS",365],[14,15,"SEC",390],[18,19,"SEC",451],[4,14,"SEC",358],[14,19,"SEC",495],[19,5,"SEC",542],[5,7,"FH",265],[6,8,"FH",265],[7,9,"FH",211],[8,10,"FH",211],[9,11,"FH",214],[10,12,"FH",214],[11,13,"FH",161],[12,13,"FH",161],[5,6,"SEC",510],[5,8,"SEC",575],[9,10,"FHB",470],[2,12,"FHB",936],[11,2,"FHB",887],[12,3,"FHB",887],[5,33,"SIS",390],[6,34,"SIS",390],[33,22,"SIS",520],[34,23,"SIS",520],[7,35,"SIS",390],[8,36,"SIS",390],[35,24,"SIS",520],[36,25,"SIS",520],[5,35,"SIS",472],[6,36,"SIS",472],[35,22,"SIS",584],[36,23,"SIS",584],[33,35,"SIS",265],[34,36,"SIS",265],[9,26,"SEC",913],[10,27,"SEC",913],[35,9,"SEC",444],[36,10,"SEC",444],[35,26,"SEC",586],[36,27,"SEC",586],[33,37,"LAP",268],[34,37,"LAP",268],[22,24,"MH",265],[23,25,"MH",265],[24,26,"MH",270],[25,27,"MH",270],[26,28,"MH",592],[27,29,"MH",592],[28,30,"MH",161],[29,30,"MH",161],[22,23,"SEC",570],[24,25,"SEC",570],[22,25,"SEC",629],[25,31,"SEC",466],[26,31,"SHB",185],[27,32,"SHB",185],[31,32,"SHB",190],[28,44,"MHB",885],[29,45,"MHB",885],[27,28,"SEC",728],[31,40,"SHS",342],[32,41,"SHS",342],[22,38,"REAR2",164],[23,39,"REAR2",164],[38,42,"REAR",293],[39,43,"REAR",293],[24,40,"REAR2",164],[25,41,"REAR2",164],[40,44,"REAR",303],[41,45,"REAR",303],[38,40,"REAR2",275],[39,41,"REAR2",275],[42,44,"REAR",355],[43,45,"REAR",355],[22,40,"REAR2",320],[23,41,"REAR2",320],[38,44,"REAR2",460],[39,45,"REAR2",460],[38,39,"REAR2",500],[40,41,"REAR2",500],[42,43,"REAR",420],[44,45,"REAR",420],[42,45,"REAR",550],[22,39,"REAR2",558],[38,43,"REAR2",544],[14,48,"SUSP",367],[15,49,"SUSP",367],[18,48,"SUSP",339],[19,49,"SUSP",339],[16,50,"SUSP",353],[17,51,"SUSP",353],[20,50,"SUSP",321],[21,51,"SUSP",321],[20,48,"SUSP",394],[21,49,"SUSP",394],[48,50,"SUSP",251],[49,51,"SUSP",251],[48,46,"SUSP",139],[49,47,"SUSP",139],[50,46,"SUSP",158],[51,47,"SUSP",158],[16,46,"SUSP",449],[17,47,"SUSP",449],[38,54,"SUSP",284],[39,55,"SUSP",284],[42,54,"SUSP",359],[43,55,"SUSP",359],[40,56,"SUSP",260],[41,57,"SUSP",260],[44,56,"SUSP",336],[45,57,"SUSP",336],[40,54,"SUSP",339],[41,55,"SUSP",339],[54,56,"SUSP",251],[55,57,"SUSP",251],[54,52,"SUSP",139],[55,53,"SUSP",139],[56,52,"SUSP",158],[57,53,"SUSP",158],[42,52,"SUSP",455],[43,53,"SUSP",455]],"groups":{"MH":{"name":"메인 롤후프","color":"#d62728","tube":"Ø25.4×2.3","od":25.4,"cls":"hoop"},"FH":{"name":"전방 롤후프","color":"#ff7f0e","tube":"Ø31.8×2","od":31.8,"cls":"hoop"},"SHB":{"name":"어깨벨트 바","color":"#8c564b","tube":"Ø25.4×2.3","od":25.4,"cls":"hoop"},"MHB":{"name":"메인 롤후프 지지대","color":"#e377c2","tube":"Ø25.4×1.6","od":25.4,"cls":"primary"},"SHS":{"name":"어깨벨트 바 지지","color":"#f7b6d2","tube":"Ø25.4×1.6","od":25.4,"cls":"primary"},"FHB":{"name":"전방 롤후프 지지대","color":"#bcbd22","tube":"Ø25.4×1.6","od":25.4,"cls":"primary"},"SIS":{"name":"측면 충격구조","color":"#1f77b4","tube":"Ø25.4×1.6","od":25.4,"cls":"primary"},"LAP":{"name":"랩·안티서브 벨트 가로재","color":"#aec7e8","tube":"Ø25.4×1.6","od":25.4,"cls":"primary"},"FBH":{"name":"전방 벌크헤드","color":"#2ca02c","tube":"Ø25.4×1.6","od":25.4,"cls":"primary"},"FBS":{"name":"전방 벌크헤드 지지","color":"#17becf","tube":"Ø25.4×1.6","od":25.4,"cls":"primary"},"REAR":{"name":"후방 벌크헤드·후방 지지","color":"#9467bd","tube":"Ø25.4×1.6","od":25.4,"cls":"primary"},"REAR2":{"name":"후방 프레임(모터 베이)","color":"#c5b0d5","tube":"Ø22.2×1.2","od":22.2,"cls":"secondary"},"SEC":{"name":"기타 프레임재","color":"#7f7f7f","tube":"Ø22.2×1.2","od":22.2,"cls":"secondary"},"SUSP":{"name":"서스펜션 링크(해석용 강체)","color":"#c7c7c7","tube":"Ø60×10","od":60.0,"cls":"rigid"}},"driver":{"hip":[678.4,190.0],"shoulder":[923.4,614.4],"head":[1063.4,856.8],"knee":[264.5,470.6],"heel":[-180.0,130.0]},"radii":{"hip":100.0,"shoulder":100.0,"head":150.0},"wheels":{"wb":1550.0,"tf":1200.0,"tr":1150.0,"d":520.0,"w":203.0},"sw":[450.0,610.0,125.0],"packaging":{"배터리(≤59 V)":[900.0,1265.0,85.0,310.0,190.0],"모터·인버터":[1330.0,1520.0,110.0,330.0,150.0]},"cases":[{"key":"torsion","name":"비틀림 강성","kind":"stiffness","note":"앞바퀴 중심 ±1000 N(우력 1200 N·m), 뒷바퀴 중심 핀 고정, 서스펜션은 축력 강체 링크(댐퍼 잠금)","sf":[27.77,16.11,8.71,6.51,8.39,14.4,18.14,9.62,7.67,8.97,9.86,7.46,4.77,5.14,3.17,3.19,2.38,2.18,5.26,6.57,4.15,3.65,10.0,8.71,4.72,5.89,8.53,28.14,5.95,4.96,11.3,8.27,6.22,8.15,4.74,4.79,3.73,4.1,4.47,7.29,7.86,9.05,4.2,4.05,8.52,13.1,12.0,8.24,8.46,8.52,9.06,11.21,6.37,18.35,15.66,8.25,9.36,7.15,7.69,23.01,22.99,6.72,6.78,6.75,5.41,6.76,7.99,9.79,9.93,29.64,21.93,10.1,13.8,25.37,25.08,11.03,10.78,15.59,10.94,8.79,12.13,6.39,7.8,4.21,10.08,10.28,15.46,6.89,6.29,10.55,11.71,47.42,47.22,5.29,4.28,14.01,14.85,8.95,10.79,26.58,31.07,10.97,10.72,13.17,14.49,11.1,7.84,40.35,10.24,25.65,8.84,23.29,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]},{"key":"bump_3g","name":"범프 3 g","kind":"operating","note":"수직 3 g (노면 충격), 네 바퀴 중심 핀 지지","sf":[99,99,99,99,99,99,99,99,30.95,53.15,27.66,38.23,99,67.94,60.03,42.31,32.39,33.42,99,99,37.11,45.15,99,99,99,99,33.14,36.16,26.71,18.43,99,99,99,65.5,66.69,45.16,44.05,54.44,51.81,99,99,99,99,99,99,99,99,24.15,24.9,24.82,27.52,31.22,32.79,28.03,30.71,36.7,40.45,68.77,64.46,13.73,13.87,21.12,21.23,34.57,35.53,23.81,25.41,7.5,7.5,59.79,59.46,41.73,41.9,99,99,99,99,62.82,99,93.52,39.53,24.28,24.15,26.38,99,99,99,57.84,69.41,12.18,21.84,40.77,38.51,14.31,15.82,47.21,64.78,43.27,74.71,99,99,23.37,26.1,60.87,56.71,10.8,23.65,77.35,99,99,69.33,64.7,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]},{"key":"brake_corner","name":"제동 1.5 g + 선회 1.5 g + 1 g","kind":"operating","note":"관성력: 앞(-X) 1.5 g, 좌(+Y) 1.5 g, 수직 1 g","sf":[99,81.63,99,45.31,24.27,53.5,99,99,76.55,66.27,12.75,14.29,33.79,13.82,16.21,13.9,12.95,65.87,46.27,23.29,22.84,33.98,70.92,36.09,30.33,37.64,35.67,54.37,22.24,36.38,99,52.08,16.45,83.5,93.07,43.68,77.86,99,99,99,99,14.89,23.08,46.21,99,99,78.16,6.04,10.25,8.74,8.22,24.2,18.8,19.52,17.17,16.22,14.95,19.3,17.76,12.76,9.87,29.45,74.38,28.46,32.35,35.33,23.03,12.8,11.0,99,58.53,99,45.62,63.01,49.88,61.97,71.02,15.42,26.1,37.19,24.41,18.99,20.54,13.28,74.44,59.4,99,21.99,22.5,6.68,13.98,19.01,23.16,19.61,17.08,17.73,16.53,15.14,17.95,22.74,19.69,47.34,25.75,14.38,13.82,9.2,48.5,21.57,58.75,74.76,23.08,44.88,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]},{"key":"main_hoop","name":"메인 롤후프(전복)","kind":"crash","note":"후프 상단 Fx 6 kN(후방), Fy 5 kN, Fz -9 kN — FSAE SES 관례값. 상단 직선부(모서리 1/4·1/4, 중앙 1/2)에 분포, 메인·전방 후프 하단 변위 고정","sf":[99,99,99,99,99,99,99,99,76.94,99,63.64,99,99,99,79.58,99,41.02,36.31,99,99,99,99,99,99,99,99,54.21,51.62,99,99,99,99,99,28.51,25.49,25.72,16.04,25.58,13.28,99,99,99,99,57.98,63.47,91.21,54.51,29.15,26.5,8.8,11.73,24.16,30.71,2.95,4.11,6.66,6.7,3.91,5.17,11.6,12.77,41.02,10.02,34.03,27.65,16.53,7.02,99,77.19,4.58,4.42,2.42,3.63,2.77,3.87,1.11,1.16,27.44,5.55,4.99,3.28,2.5,2.84,3.49,2.73,2.99,2.71,3.15,5.82,2.13,2.59,11.46,15.27,1.15,1.42,2.28,2.41,2.32,2.5,11.93,11.44,2.79,4.83,2.98,3.07,18.62,8.42,64.62,14.2,29.1,14.56,22.64,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]},{"key":"front_hoop","name":"전방 롤후프(전복)","kind":"crash","note":"메인 롤후프와 같은 하중·분포·구속","sf":[24.91,14.51,12.25,9.82,16.67,15.17,18.71,7.89,32.84,6.44,16.78,5.37,10.28,7.21,11.33,7.97,7.03,3.0,9.46,5.91,13.4,5.22,23.66,14.32,11.81,7.7,10.73,3.05,8.72,6.11,14.18,9.89,6.11,3.17,1.53,3.67,1.06,1.06,1.57,1.12,1.71,6.09,1.88,1.18,6.06,5.32,4.6,30.03,16.08,40.58,29.88,5.61,4.71,12.94,24.73,9.5,6.34,9.35,5.65,9.35,8.53,5.75,7.5,4.78,3.09,10.0,18.51,9.4,23.26,34.93,26.48,55.41,40.1,48.96,46.66,67.31,72.14,99,28.63,82.15,79.02,12.52,30.77,26.02,80.22,72.88,95.66,29.14,57.0,36.51,53.2,99,99,11.96,37.77,48.95,46.88,99,69.13,99,99,84.06,41.81,95.39,89.51,99,67.88,99,57.83,99,95.52,99,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]},{"key":"side_impact","name":"측면 충돌 7 kN","kind":"crash","note":"왼쪽 측면충격구조에 7 kN(FSAE SES 관례), 반대쪽 서스펜션 마운트 고정","sf":[46.61,17.4,15.96,12.55,6.77,16.54,38.44,8.22,15.74,35.59,3.85,8.52,32.78,3.77,17.26,6.26,6.57,2.43,28.09,7.68,19.61,7.38,44.18,12.4,16.97,6.22,7.69,6.64,6.09,10.97,19.89,13.66,3.07,2.48,5.22,2.05,2.44,3.85,3.3,12.4,14.16,3.27,2.8,4.77,35.19,21.88,16.63,4.7,4.19,4.92,5.03,1.6,7.13,1.6,7.42,2.6,7.82,2.86,22.4,2.01,6.13,4.69,8.85,1.32,7.55,1.35,9.9,2.59,5.68,8.99,15.38,10.55,12.0,17.41,28.08,10.2,12.94,5.74,2.85,7.16,8.63,3.4,6.9,3.38,13.4,11.88,18.23,6.4,5.29,2.81,5.25,26.0,41.26,3.31,2.79,22.88,18.03,8.22,9.7,19.14,28.0,10.41,13.14,14.43,24.5,13.29,6.8,25.66,12.84,15.59,6.33,28.08,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]},{"key":"front_impact","name":"전면 충돌 20 g (48.8 kN)","kind":"crash","note":"차량 249 kg × 20 g 를 범퍼 마운트(벌크헤드 4점)에 입력, 메인 후프 하단·지지대 결합부 고정(보수적)","sf":[16.86,18.41,8.29,10.86,23.87,48.36,3.1,3.46,3.19,3.66,3.5,3.77,3.77,3.78,3.62,3.56,3.19,3.06,17.19,17.55,19.59,15.64,26.32,28.06,24.04,21.48,14.87,19.4,76.8,17.48,16.38,32.36,14.09,4.98,6.86,3.82,3.48,3.97,3.65,20.53,17.9,9.31,9.09,13.88,12.55,9.42,9.69,3.91,4.0,3.56,3.73,3.72,3.41,3.43,3.25,9.98,10.84,8.71,8.72,17.4,23.54,13.17,10.68,7.11,6.51,8.03,7.11,18.43,31.14,14.72,13.54,4.39,4.08,4.26,4.29,33.04,21.06,41.63,8.4,24.07,7.2,4.34,4.19,5.69,4.12,4.06,8.58,6.24,6.82,2.21,2.07,10.67,11.14,1.44,1.44,2.42,2.26,2.28,2.19,10.23,9.93,3.89,3.71,2.79,2.68,34.54,42.69,99,35.41,34.94,50.48,53.4,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]},{"key":"rear_impact","name":"후면 충돌 20 g (48.8 kN)","kind":"crash","note":"후면 범퍼 마운트(후방 벌크헤드 4점) 입력, 메인 후프 하부 고정","sf":[99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,65.44,74.61,99,99,30.79,35.44,99,99,60.18,62.58,99,99,28.51,25.93,99,99,23.58,20.27,99,99,29.66,28.04,13.82,14.51,11.15,11.53,88.02,68.01,99,61.63,99,17.96,11.38,12.53,19.48,19.57,21.01,24.42,12.12,14.97,2.53,2.52,2.85,2.95,1.62,1.63,2.05,2.01,3.89,3.81,12.02,12.68,27.71,21.9,5.94,5.6,21.46,17.97,19.83,18.25,28.95,78.89,47.95,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]},{"key":"harness","name":"6점식 벨트 하중 (17.7 kN)","kind":"crash","note":"드라이버 90 kg × 20 g: 어깨 2×20 %, 랩 2×25 %, 안티서브 10 % (벨트 방향), 반력은 전방 벌크헤드(범퍼)","sf":[7.95,11.82,18.55,41.71,52.68,21.06,2.9,3.47,4.04,4.22,5.29,5.93,2.09,2.18,2.24,2.32,2.82,2.71,5.45,6.2,5.36,5.86,7.91,8.94,5.5,6.35,5.13,5.54,28.2,22.13,15.52,28.67,12.02,3.9,5.03,2.38,2.32,2.24,2.16,11.53,11.12,12.45,8.12,10.41,7.02,5.08,5.4,8.24,8.36,6.19,6.12,4.2,3.72,6.45,6.85,6.04,6.16,9.9,10.36,4.65,4.07,3.84,4.13,5.86,5.88,3.14,3.86,1.52,1.52,6.55,9.89,2.76,5.08,9.57,5.99,18.78,14.79,26.26,5.57,10.55,1.8,1.43,1.44,1.43,29.1,24.19,5.52,2.62,2.81,13.8,8.57,99,99,2.2,3.84,10.44,6.34,9.21,8.81,82.14,57.58,5.89,5.57,83.16,29.83,49.27,6.79,99,34.05,45.08,53.15,73.71,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]}],"summary":{"frame_mass_kg":41.86,"torsional_stiffness_Nm_per_deg":2186,"vehicle_mass_kg":248.9,"front_weight_pct":41.5,"frame_envelope_mm":{"length":2170,"width":570,"height":1200},"cg_mm":[907.0,-0.1,210.5],"bom":[{"tube":"Ø31.8×2","pieces":8,"length_m":1.7,"mass_kg":2.5,"stock_bars_6m":1},{"tube":"Ø25.4×2.3","pieces":11,"length_m":3.14,"mass_kg":4.11,"stock_bars_6m":1},{"tube":"Ø25.4×1.6","pieces":55,"length_m":22.26,"mass_kg":20.9,"stock_bars_6m":5},{"tube":"Ø22.2×1.2","pieces":38,"length_m":16.96,"mass_kg":10.54,"stock_bars_6m":4}]},"checks":[{"item":"휠베이스","value":1550.0,"unit":"mm","criterion":"≥ 1500","ok":true},{"item":"타이어 폭(가정 타이어)","value":203.0,"unit":"mm","criterion":"≥ 200","ok":true},{"item":"튜브 규격 · 메인 롤후프","value":"Ø25.4×2.3","unit":"","criterion":"≥ Ø25×1.8","ok":true},{"item":"튜브 규격 · 전방 롤후프","value":"Ø31.8×2","unit":"","criterion":"≥ Ø25×1.8","ok":true},{"item":"튜브 규격 · 어깨벨트 바","value":"Ø25.4×2.3","unit":"","criterion":"≥ Ø25×1.8","ok":true},{"item":"튜브 규격 · 메인 롤후프 지지대","value":"Ø25.4×1.6","unit":"","criterion":"≥ Ø25×1.6","ok":true},{"item":"튜브 규격 · 어깨벨트 바 지지","value":"Ø25.4×1.6","unit":"","criterion":"≥ Ø25×1.6","ok":true},{"item":"튜브 규격 · 전방 롤후프 지지대","value":"Ø25.4×1.6","unit":"","criterion":"≥ Ø25×1.6","ok":true},{"item":"튜브 규격 · 측면 충격구조","value":"Ø25.4×1.6","unit":"","criterion":"≥ Ø25×1.6","ok":true},{"item":"튜브 규격 · 랩·안티서브 벨트 가로재","value":"Ø25.4×1.6","unit":"","criterion":"≥ Ø25×1.6","ok":true},{"item":"튜브 규격 · 전방 벌크헤드","value":"Ø25.4×1.6","unit":"","criterion":"≥ Ø25×1.6","ok":true},{"item":"튜브 규격 · 전방 벌크헤드 지지","value":"Ø25.4×1.6","unit":"","criterion":"≥ Ø25×1.6","ok":true},{"item":"튜브 규격 · 후방 벌크헤드·후방 지지","value":"Ø25.4×1.6","unit":"","criterion":"≥ Ø25×1.6","ok":true},{"item":"튜브 규격 · 후방 프레임(모터 베이)","value":"Ø22.2×1.2","unit":"","criterion":"≥ Ø20×1.2","ok":true},{"item":"튜브 규격 · 기타 프레임재","value":"Ø22.2×1.2","unit":"","criterion":"≥ Ø20×1.2","ok":true},{"item":"재료 항복강도","value":380.0,"unit":"MPa","criterion":"≥ 285","ok":true},{"item":"재료 인장강도","value":510.0,"unit":"MPa","criterion":"≥ 360","ok":true},{"item":"헬멧 ~ 롤후프 연결선 여유","value":60.3,"unit":"mm","criterion":"≥ 50.8","ok":true},{"item":"헬멧 뒤 ~ 메인 후프 앞면 (헤드레스트 공간)","value":63.9,"unit":"mm","criterion":"≥ 40 (패드+간격, 자체)","ok":true},{"item":"메인 후프 상단 - 헬멧 상단","value":193.2,"unit":"mm","criterion":"> 0","ok":true},{"item":"메인 후프-지지대 각도(측면도)","value":30.6,"unit":"deg","criterion":"≥ 30","ok":true},{"item":"지지대 부착점 ~ 후프 최상단","value":32.7,"unit":"mm","criterion":"≤ 160","ok":true},{"item":"전방 후프 상단 - 스티어링 휠 상단","value":25.0,"unit":"mm","criterion":"≥ 0","ok":true},{"item":"전방 후프가 휠보다 앞선 거리","value":70.0,"unit":"mm","criterion":"≤ 250","ok":true},{"item":"무릎 상단(+60) ~ 전방 후프 상단","value":229.4,"unit":"mm","criterion":"> 0","ok":true},{"item":"무릎 ~ 프레임 튜브 최소 간격 [FH_up_L-FH_up_R]","value":62.0,"unit":"mm","criterion":"≥ 25 (자체)","ok":true},{"item":"헬멧 ~ 프레임 튜브 최소 간격 [MH_sh_R-MH_top_L]","value":75.5,"unit":"mm","criterion":"≥ 25 (자체)","ok":true},{"item":"어깨벨트 각도(수평 기준, +위)","value":-2.2,"unit":"deg","criterion":"-20 ~ +10","ok":true},{"item":"어깨벨트 마운트 간격","value":190.0,"unit":"mm","criterion":"178 ~ 229","ok":true},{"item":"랩벨트 각도(측면도)","value":53.8,"unit":"deg","criterion":"45 ~ 65","ok":true},{"item":"프레임 최저지상고","value":52.3,"unit":"mm","criterion":"≥ 40","ok":true},{"item":"6점식 벨트 마운트 노드(어깨2·랩2·안티서브)","value":"있음","unit":"","criterion":"필수","ok":true},{"item":"전·후면 범퍼(충격완화장치) 마운트면","value":"전방/후방 벌크헤드","unit":"","criterion":"필수","ok":true},{"item":"해석 · 범프 3 g 안전율","value":7.5,"unit":"-","criterion":"≥ 1.5 (좌굴 이용률 ≤ 0.67)","ok":true},{"item":"해석 · 제동 1.5 g + 선회 1.5 g + 1 g 안전율","value":6.04,"unit":"-","criterion":"≥ 1.5 (좌굴 이용률 ≤ 0.67)","ok":true},{"item":"해석 · 메인 롤후프(전복) 안전율","value":1.11,"unit":"-","criterion":"≥ 1 (좌굴 이용률 ≤ 1)","ok":true},{"item":"해석 · 메인 롤후프(전복) 최대 변위","value":5.49,"unit":"mm","criterion":"≤ 25","ok":true},{"item":"해석 · 전방 롤후프(전복) 안전율","value":1.06,"unit":"-","criterion":"≥ 1 (좌굴 이용률 ≤ 1)","ok":true},{"item":"해석 · 전방 롤후프(전복) 최대 변위","value":4.04,"unit":"mm","criterion":"≤ 25","ok":true},{"item":"해석 · 측면 충돌 7 kN 안전율","value":1.32,"unit":"-","criterion":"≥ 1 (좌굴 이용률 ≤ 1)","ok":true},{"item":"해석 · 측면 충돌 7 kN 최대 변위","value":5.41,"unit":"mm","criterion":"≤ 25","ok":true},{"item":"해석 · 전면 충돌 20 g (48.8 kN) 안전율","value":1.44,"unit":"-","criterion":"≥ 1 (좌굴 이용률 ≤ 1)","ok":true},{"item":"해석 · 후면 충돌 20 g (48.8 kN) 안전율","value":1.62,"unit":"-","criterion":"≥ 1 (좌굴 이용률 ≤ 1)","ok":true},{"item":"해석 · 6점식 벨트 하중 (17.7 kN) 안전율","value":1.43,"unit":"-","criterion":"≥ 1 (좌굴 이용률 ≤ 1)","ok":true},{"item":"해석 · 비틀림 강성","value":2186,"unit":"N·m/deg","criterion":"≥ 1500","ok":true},{"item":"프레임 질량(용접·탭 +10 %)","value":41.9,"unit":"kg","criterion":"≤ 35","ok":false}],"load_cases":[{"key":"torsion","name":"비틀림 강성","max_disp_mm":3.65,"min_sf":2.18,"min_sf_group":"전방 벌크헤드 지지"},{"key":"bending_1g","name":"정적 1 g 굽힘","max_disp_mm":0.18,"min_sf":22.5,"min_sf_group":"랩·안티서브 벨트 가로재"},{"key":"bump_3g","name":"범프 3 g","max_disp_mm":0.54,"min_sf":7.5,"min_sf_group":"랩·안티서브 벨트 가로재"},{"key":"brake_corner","name":"제동 1.5 g + 선회 1.5 g + 1 g","max_disp_mm":0.84,"min_sf":6.04,"min_sf_group":"측면 충격구조"},{"key":"main_hoop","name":"메인 롤후프(전복)","max_disp_mm":5.49,"min_sf":1.11,"min_sf_group":"메인 롤후프"},{"key":"front_hoop","name":"전방 롤후프(전복)","max_disp_mm":4.04,"min_sf":1.06,"min_sf_group":"전방 롤후프"},{"key":"side_impact","name":"측면 충돌 7 kN","max_disp_mm":5.41,"min_sf":1.32,"min_sf_group":"기타 프레임재"},{"key":"front_impact","name":"전면 충돌 20 g (48.8 kN)","max_disp_mm":5.69,"min_sf":1.44,"min_sf_group":"후방 프레임(모터 베이)"},{"key":"rear_impact","name":"후면 충돌 20 g (48.8 kN)","max_disp_mm":1.86,"min_sf":1.62,"min_sf_group":"후방 프레임(모터 베이)"},{"key":"harness","name":"6점식 벨트 하중 (17.7 kN)","max_disp_mm":6.98,"min_sf":1.43,"min_sf_group":"어깨벨트 바"}]};
+const $ = s => document.querySelector(s);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmt = (v, d=0) => Number(v).toLocaleString('ko-KR', {maximumFractionDigits:d, minimumFractionDigits:d});
+
+// ---------- 데이터 준비 ----------
+const N = D.nodes;
+const xs = N.map(p=>p[0]), ys = N.map(p=>p[1]), zs = N.map(p=>p[2]);
+const T = [(Math.max(...xs)+Math.min(...xs))/2, 0, 500];
+const SPAN = Math.max(Math.max(...xs)-Math.min(...xs), Math.max(...ys)-Math.min(...ys)) + 500;
+
+const state = {yaw:-0.62, elev:0.42, zoom:1, color:'group', caseIdx:0, sel:null,
+  show:{driver:true, wheels:true, pack:true, susp:false}};
+const VIEWS = {iso:[-0.62,0.42], side:[Math.PI,0], top:[Math.PI,Math.PI/2-1e-3], front:[Math.PI/2,0.02]};
+
+const SF_BINS = [[1,'--sf0','< 1.0'],[1.5,'--sf1','1.0–1.5'],[2,'--sf2','1.5–2.0'],[4,'--sf3','2.0–4.0'],[1e9,'--sf4','≥ 4.0']];
+const sfColor = v => css(SF_BINS.find(b => v < b[0])[1]);
+
+// ---------- 투영 ----------
+const cv = $('#cv'), ctx = cv.getContext('2d');
+let W=0, H=0, DPR=1, BASE=1;
+function resize(){
+  const r = cv.getBoundingClientRect();
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = r.width; H = r.height;
+  cv.width = Math.round(W*DPR); cv.height = Math.round(H*DPR);
+  BASE = Math.min(W/(SPAN*1.1), H/1900) * (W < 560 ? 1.25 : 1);
+  draw();
+}
+function proj(p){
+  const x = p[0]-T[0], y = p[1]-T[1], z = p[2]-T[2];
+  const cy = Math.cos(state.yaw), sy = Math.sin(state.yaw);
+  const x1 = cy*x - sy*y, y1 = sy*x + cy*y;
+  const ce = Math.cos(state.elev), se = Math.sin(state.elev);
+  const depth = y1*ce - z*se, up = y1*se + z*ce;
+  const cam = SPAN*2.2, s = cam/(cam+depth), k = BASE*state.zoom*s;
+  return [W/2 + x1*k, H*0.54 - up*k, depth, k];
+}
+
+// ---------- 그리기 ----------
+function circle3(c, r, plane, n=40){
+  const pts=[];
+  for(let i=0;i<=n;i++){const a=i/n*2*Math.PI, u=Math.cos(a)*r, v=Math.sin(a)*r;
+    pts.push(plane==='xz'?[c[0]+u,c[1],c[2]+v]:[c[0],c[1]+u,c[2]+v]);}
+  return pts;
+}
+function polyline(pts, color, lw, dash){
+  ctx.beginPath(); ctx.setLineDash(dash||[]);
+  pts.forEach((p,i)=>{const q=proj(p); i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]);});
+  ctx.strokeStyle=color; ctx.lineWidth=lw; ctx.stroke(); ctx.setLineDash([]);
+}
+let segCache=[];
+function draw(){
+  if(!W) return;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.clearRect(0,0,W,H);
+  // 지면 격자
+  const g = css('--grid');
+  for(let x=-1000;x<=2200;x+=250) polyline([[x,-900,0],[x,900,0]], g, 1);
+  for(let y=-900;y<=900;y+=300) polyline([[-1000,y,0],[2200,y,0]], g, 1);
+
+  const muted = css('--muted');
+  if(state.show.wheels){
+    const w=D.wheels;
+    [[0,w.tf],[w.wb,w.tr]].forEach(([x,tr])=>[1,-1].forEach(s=>{
+      [-w.w/2,w.w/2].forEach(o=>polyline(circle3([x,s*tr/2+o,w.d/2],w.d/2,'xz'), muted, 1, [4,4]));
+    }));
+  }
+  if(state.show.pack){
+    const pc = css('--pack');
+    for(const [name,[x0,x1,z0,z1,hw]] of Object.entries(D.packaging)){
+      const c=[[x0,-hw,z0],[x1,-hw,z0],[x1,hw,z0],[x0,hw,z0],[x0,-hw,z1],[x1,-hw,z1],[x1,hw,z1],[x0,hw,z1]];
+      [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]].forEach(([a,b])=>polyline([c[a],c[b]],pc,1,[5,4]));
+      const q=proj([(x0+x1)/2,0,z1+40]); ctx.fillStyle=pc; ctx.font=`12px ${css('--font-body')}`; ctx.textAlign='center'; ctx.fillText(name,q[0],q[1]);
+    }
+  }
+  // 부재 (먼 것부터)
+  const cs = D.cases[state.caseIdx];
+  segCache = D.members.map((m,i)=>{
+    const g = D.groups[m[2]];
+    if(g.cls==='rigid' && !state.show.susp) return null;
+    const a=proj(N[m[0]]), b=proj(N[m[1]]);
+    return {i, a, b, depth:(a[2]+b[2])/2, g, rigid:g.cls==='rigid'};
+  }).filter(Boolean).sort((p,q)=>q.depth-p.depth);
+  for(const s of segCache){
+    let col = s.g.color, lw;
+    if(s.rigid){ col = muted; lw = 1; }
+    else {
+      lw = Math.max(1.2, s.g.od*(s.a[3]+s.b[3])/2*0.9);
+      if(state.color==='sf'){ const v=cs.sf[s.i]; col = v==null? muted : sfColor(v); }
+    }
+    ctx.beginPath(); ctx.setLineDash(s.rigid?[3,3]:[]);
+    ctx.moveTo(s.a[0],s.a[1]); ctx.lineTo(s.b[0],s.b[1]);
+    ctx.lineCap='round'; ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.stroke();
+    if(state.sel===s.i){ ctx.strokeStyle=css('--accent'); ctx.lineWidth=lw+5; ctx.globalAlpha=.35; ctx.stroke(); ctx.globalAlpha=1; }
+  }
+  ctx.setLineDash([]);
+  if(state.show.driver){
+    const dc = css('--driver'), dr = D.driver, R = D.radii;
+    [['hip',R.hip],['shoulder',R.shoulder],['head',R.head]].forEach(([k,r])=>polyline(circle3([dr[k][0],0,dr[k][1]],r,'xz'),dc,1.6));
+    polyline([[dr.hip[0],0,dr.hip[1]],[dr.head[0],0,dr.head[1]]],dc,1.2);
+    [-110,110].forEach(y=>polyline([[dr.hip[0],y,dr.hip[1]],[dr.knee[0],y,dr.knee[1]],[dr.heel[0],y,dr.heel[1]]],dc,1.2,[5,4]));
+    polyline(circle3([D.sw[0],0,D.sw[1]],D.sw[2],'yz'),css('--ink'),2);
+  }
+}
+
+// ---------- 상호작용 ----------
+const ptrs = new Map(); let moved=false, pinch0=null;
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId,[e.clientX,e.clientY]); moved=false;
+  if(ptrs.size===2){const [p,q]=[...ptrs.values()]; pinch0={d:Math.hypot(p[0]-q[0],p[1]-q[1]), z:state.zoom};}});
+cv.addEventListener('pointermove',e=>{
+  if(!ptrs.has(e.pointerId)) return;
+  const prev=ptrs.get(e.pointerId), dx=e.clientX-prev[0], dy=e.clientY-prev[1];
+  ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+  if(ptrs.size===2 && pinch0){const [p,q]=[...ptrs.values()]; state.zoom=Math.min(6,Math.max(.4,pinch0.z*Math.hypot(p[0]-q[0],p[1]-q[1])/pinch0.d)); moved=true;}
+  else if(ptrs.size===1){ if(Math.abs(dx)+Math.abs(dy)>0.5) moved=true;
+    state.yaw-=dx*0.008; state.elev=Math.min(Math.PI/2-1e-3,Math.max(-0.3,state.elev+dy*0.008)); setView(null);}
+  draw();
+});
+function endPtr(e){
+  if(ptrs.size===1 && !moved) pick(e);
+  ptrs.delete(e.pointerId); if(ptrs.size<2) pinch0=null;
+}
+cv.addEventListener('pointerup',endPtr); cv.addEventListener('pointercancel',e=>{ptrs.delete(e.pointerId);pinch0=null;});
+cv.addEventListener('wheel',e=>{e.preventDefault(); state.zoom=Math.min(6,Math.max(.4,state.zoom*Math.exp(-e.deltaY*0.0015))); draw();},{passive:false});
+cv.addEventListener('keydown',e=>{
+  const k={ArrowLeft:[.1,0],ArrowRight:[-.1,0],ArrowUp:[0,.08],ArrowDown:[0,-.08]}[e.key];
+  if(k){e.preventDefault(); state.yaw+=k[0]; state.elev=Math.min(Math.PI/2-1e-3,Math.max(-0.3,state.elev+k[1])); setView(null); draw();}
+  if(e.key==='+'||e.key==='='){state.zoom=Math.min(6,state.zoom*1.15);draw();}
+  if(e.key==='-'){state.zoom=Math.max(.4,state.zoom/1.15);draw();}
+});
+function pick(e){
+  const r=cv.getBoundingClientRect(), px=e.clientX-r.left, py=e.clientY-r.top;
+  let best=null, bd=14;
+  for(const s of segCache){ if(s.rigid) continue;
+    const [ax,ay]=s.a,[bx,by]=s.b, vx=bx-ax, vy=by-ay, L2=vx*vx+vy*vy||1;
+    const t=Math.max(0,Math.min(1,((px-ax)*vx+(py-ay)*vy)/L2)), d=Math.hypot(ax+t*vx-px, ay+t*vy-py);
+    if(d<bd || (best && Math.abs(d-bd)<2 && s.depth<best.depth)){bd=d;best=s;}
+  }
+  state.sel = best? best.i : null; showInfo(); draw();
+}
+function showInfo(){
+  const el=$('#info');
+  if(state.sel==null){el.textContent='부재를 탭하면 규격, 길이, 선택한 하중 조건의 안전율이 여기에 나옵니다.';return;}
+  const m=D.members[state.sel], g=D.groups[m[2]], cs=D.cases[state.caseIdx], v=cs.sf[state.sel];
+  el.innerHTML=`<b>${D.names[m[0]]} – ${D.names[m[1]]}</b> · ${g.name} · ${g.tube} · 길이 <b>${fmt(m[3])} mm</b><br>`+
+    `${cs.name}: 안전율 <b style="color:${v==null?css('--muted'):sfColor(v)}">${v==null?'—':v>=99?'≥ 99':fmt(v,2)}</b> <span style="color:var(--muted)">(항복·좌굴 중 작은 값)</span>`;
+}
+function setView(name){
+  for(const k of Object.keys(VIEWS)) $('#v-'+k).setAttribute('aria-pressed', String(k===name));
+}
+for(const k of Object.keys(VIEWS)) $('#v-'+k).addEventListener('click',()=>{[state.yaw,state.elev]=VIEWS[k]; state.zoom=1; setView(k); draw();});
+function setColor(mode){
+  state.color=mode; $('#c-group').setAttribute('aria-pressed',String(mode==='group')); $('#c-sf').setAttribute('aria-pressed',String(mode==='sf'));
+  legend(); markCase(); draw();
+}
+$('#c-group').addEventListener('click',()=>setColor('group'));
+$('#c-sf').addEventListener('click',()=>setColor('sf'));
+const sel=$('#case');
+D.cases.forEach((c,i)=>{const o=document.createElement('option'); o.value=i; o.textContent=c.name; sel.appendChild(o);});
+sel.addEventListener('change',()=>{state.caseIdx=+sel.value; setColor('sf'); showInfo();});
+for(const k of ['driver','wheels','pack','susp']) $('#t-'+k).addEventListener('change',e=>{state.show[k]=e.target.checked; draw();});
+
+function legend(){
+  const el=$('#legend');
+  if(state.color==='group'){
+    el.innerHTML=Object.values(D.groups).filter(g=>g.cls!=='rigid').map(g=>`<span><i style="background:${g.color}"></i>${g.name} ${g.tube}</span>`).join('');
+  } else {
+    el.innerHTML=`<span>${D.cases[state.caseIdx].name} 안전율</span>`+SF_BINS.map(b=>`<span><i style="background:var(${b[1]})"></i>${b[2]}</span>`).join('');
+  }
+}
+
+// ---------- 패널 ----------
+const S=D.summary;
+$('#stats').innerHTML=[
+  [fmt(S.frame_mass_kg,1),'kg','프레임 질량(용접·탭 +10 %)'],
+  [fmt(S.torsional_stiffness_Nm_per_deg),'N·m/°','비틀림 강성'],
+  [fmt(S.vehicle_mass_kg),'kg','차량 질량(드라이버 포함, 가정)'],
+  [fmt(S.front_weight_pct,1),'%','앞축 하중'],
+].map(([v,u,k])=>`<div class="stat"><div class="v">${v}<small>${u}</small></div><div class="k">${k}</div></div>`).join('');
+
+const keyToIdx = Object.fromEntries(D.cases.map((c,i)=>[c.key,i]));
+const pill = v => `<span class="pill" style="background:${sfColor(v)}">${fmt(v,2)}</span>`;
+function renderCases(){
+  $('#cases').innerHTML='<tr><th>조건</th><th class="num">변위 mm</th><th class="num">최소 안전율</th></tr>'+
+    D.load_cases.filter(r=>r.key in keyToIdx).map(r=>`<tr tabindex="0" data-k="${r.key}"><td>${r.name}<br><span style="color:var(--muted)">${r.min_sf_group}</span></td><td class="num">${fmt(r.max_disp_mm,2)}</td><td class="num">${pill(r.min_sf)}</td></tr>`).join('');
+  $('#cases').querySelectorAll('tr[data-k]').forEach(tr=>{
+    const go=()=>{state.caseIdx=keyToIdx[tr.dataset.k]; sel.value=state.caseIdx; setColor('sf'); showInfo();};
+    tr.addEventListener('click',go); tr.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});
+  });
+  markCase();
+}
+function markCase(){
+  const k=D.cases[state.caseIdx].key;
+  $('#cases').querySelectorAll('tr[data-k]').forEach(tr=>tr.classList.toggle('sel', state.color==='sf' && tr.dataset.k===k));
+}
+const ok=D.checks.filter(c=>c.ok).length, ng=D.checks.filter(c=>!c.ok);
+$('#chk-sum').innerHTML=`<span class="okc">${ok} / ${D.checks.length} 통과</span>`+(ng.length?` · <span class="ng">미달 ${ng.length}</span>`:'');
+const row=c=>`<tr><td>${c.item}</td><td class="num">${typeof c.value==='number'?fmt(c.value,1):c.value} ${c.unit}</td><td>${c.criterion}</td><td class="${c.ok?'okc':'ng'}">${c.ok?'OK':'NG'}</td></tr>`;
+$('#ngtable').innerHTML=ng.map(row).join('');
+$('#chk').innerHTML='<tr><th>항목</th><th class="num">값</th><th>기준</th><th></th></tr>'+D.checks.map(row).join('');
+$('#bom').innerHTML='<tr><th>규격</th><th class="num">개수</th><th class="num">길이 m</th><th class="num">kg</th><th class="num">정척</th></tr>'+
+  S.bom.map(b=>`<tr><td class="num" style="text-align:left">${b.tube}</td><td class="num">${b.pieces}</td><td class="num">${fmt(b.length_m,2)}</td><td class="num">${fmt(b.mass_kg,1)}</td><td class="num">${b.stock_bars_6m}</td></tr>`).join('');
+
+renderCases(); legend();
+new ResizeObserver(resize).observe(cv);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{legend();renderCases();draw();});
+new MutationObserver(()=>{legend();renderCases();draw();}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+resize();
+</script>
