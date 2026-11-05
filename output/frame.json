@@ -1,0 +1,1367 @@
+{
+ "units": "mm",
+ "axes": "X 뒤(+), Y 왼쪽(+), Z 위(+)",
+ "nodes": {
+  "FB_bot_L": [
+   -430.0,
+   160.0,
+   65.0
+  ],
+  "FB_bot_R": [
+   -430.0,
+   -160.0,
+   65.0
+  ],
+  "FB_top_L": [
+   -430.0,
+   140.0,
+   380.0
+  ],
+  "FB_top_R": [
+   -430.0,
+   -140.0,
+   380.0
+  ],
+  "FBX_C": [
+   -430.0,
+   0.0,
+   65.0
+  ],
+  "FH_bot_L": [
+   380.0,
+   255.0,
+   65.0
+  ],
+  "FH_bot_R": [
+   380.0,
+   -255.0,
+   65.0
+  ],
+  "FH_mid_L": [
+   380.0,
+   255.0,
+   330.0
+  ],
+  "FH_mid_R": [
+   380.0,
+   -255.0,
+   330.0
+  ],
+  "FH_up_L": [
+   380.0,
+   235.0,
+   540.0
+  ],
+  "FH_up_R": [
+   380.0,
+   -235.0,
+   540.0
+  ],
+  "FH_top_L": [
+   380.0,
+   160.0,
+   740.0
+  ],
+  "FH_top_R": [
+   380.0,
+   -160.0,
+   740.0
+  ],
+  "FH_top_C": [
+   380.0,
+   0.0,
+   760.0
+  ],
+  "FL_a_L": [
+   -130.0,
+   195.2,
+   65.0
+  ],
+  "FL_a_R": [
+   -130.0,
+   -195.2,
+   65.0
+  ],
+  "FU_a_L": [
+   -130.0,
+   182.6,
+   361.5
+  ],
+  "FU_a_R": [
+   -130.0,
+   -182.6,
+   361.5
+  ],
+  "FL_b_L": [
+   130.0,
+   225.7,
+   65.0
+  ],
+  "FL_b_R": [
+   130.0,
+   -225.7,
+   65.0
+  ],
+  "FU_b_L": [
+   130.0,
+   219.5,
+   345.4
+  ],
+  "FU_b_R": [
+   130.0,
+   -219.5,
+   345.4
+  ],
+  "MH_bot_L": [
+   1290.0,
+   285.0,
+   65.0
+  ],
+  "MH_bot_R": [
+   1290.0,
+   -285.0,
+   65.0
+  ],
+  "MH_mid_L": [
+   1290.0,
+   285.0,
+   330.0
+  ],
+  "MH_mid_R": [
+   1290.0,
+   -285.0,
+   330.0
+  ],
+  "MH_sh_L": [
+   1290.0,
+   280.0,
+   600.0
+  ],
+  "MH_sh_R": [
+   1290.0,
+   -280.0,
+   600.0
+  ],
+  "MH_top_L": [
+   1290.0,
+   160.0,
+   1180.0
+  ],
+  "MH_top_R": [
+   1290.0,
+   -160.0,
+   1180.0
+  ],
+  "MH_top_C": [
+   1290.0,
+   0.0,
+   1200.0
+  ],
+  "SH_L": [
+   1290.0,
+   95.0,
+   600.0
+  ],
+  "SH_R": [
+   1290.0,
+   -95.0,
+   600.0
+  ],
+  "LR_m_L": [
+   770.0,
+   267.9,
+   65.0
+  ],
+  "LR_m_R": [
+   770.0,
+   -267.9,
+   65.0
+  ],
+  "SU_m_L": [
+   770.0,
+   267.9,
+   330.0
+  ],
+  "SU_m_R": [
+   770.0,
+   -267.9,
+   330.0
+  ],
+  "LRX_C": [
+   770.0,
+   0.0,
+   65.0
+  ],
+  "RL_a_L": [
+   1450.0,
+   250.0,
+   65.0
+  ],
+  "RL_a_R": [
+   1450.0,
+   -250.0,
+   65.0
+  ],
+  "RU_a_L": [
+   1450.0,
+   250.0,
+   340.0
+  ],
+  "RU_a_R": [
+   1450.0,
+   -250.0,
+   340.0
+  ],
+  "RL_b_L": [
+   1740.0,
+   210.0,
+   65.0
+  ],
+  "RL_b_R": [
+   1740.0,
+   -210.0,
+   65.0
+  ],
+  "RU_b_L": [
+   1740.0,
+   210.0,
+   420.0
+  ],
+  "RU_b_R": [
+   1740.0,
+   -210.0,
+   420.0
+  ],
+  "WC_F_L": [
+   0.0,
+   600.0,
+   260.0
+  ],
+  "WC_F_R": [
+   0.0,
+   -600.0,
+   260.0
+  ],
+  "LBJ_F_L": [
+   0.0,
+   530.0,
+   140.0
+  ],
+  "LBJ_F_R": [
+   0.0,
+   -530.0,
+   140.0
+  ],
+  "UBJ_F_L": [
+   0.0,
+   510.0,
+   390.0
+  ],
+  "UBJ_F_R": [
+   0.0,
+   -510.0,
+   390.0
+  ],
+  "WC_R_L": [
+   1550.0,
+   575.0,
+   260.0
+  ],
+  "WC_R_R": [
+   1550.0,
+   -575.0,
+   260.0
+  ],
+  "LBJ_R_L": [
+   1550.0,
+   505.0,
+   140.0
+  ],
+  "LBJ_R_R": [
+   1550.0,
+   -505.0,
+   140.0
+  ],
+  "UBJ_R_L": [
+   1550.0,
+   485.0,
+   390.0
+  ],
+  "UBJ_R_R": [
+   1550.0,
+   -485.0,
+   390.0
+  ]
+ },
+ "members": [
+  {
+   "a": "FB_bot_L",
+   "b": "FB_top_L",
+   "g": "FBH",
+   "od": 25.4
+  },
+  {
+   "a": "FB_bot_R",
+   "b": "FB_top_R",
+   "g": "FBH",
+   "od": 25.4
+  },
+  {
+   "a": "FB_bot_L",
+   "b": "FBX_C",
+   "g": "FBH",
+   "od": 25.4
+  },
+  {
+   "a": "FB_bot_R",
+   "b": "FBX_C",
+   "g": "FBH",
+   "od": 25.4
+  },
+  {
+   "a": "FB_top_L",
+   "b": "FB_top_R",
+   "g": "FBH",
+   "od": 25.4
+  },
+  {
+   "a": "FB_bot_L",
+   "b": "FB_top_R",
+   "g": "FBH",
+   "od": 25.4
+  },
+  {
+   "a": "FB_bot_L",
+   "b": "FL_a_L",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FB_bot_R",
+   "b": "FL_a_R",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FL_a_L",
+   "b": "FL_b_L",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FL_a_R",
+   "b": "FL_b_R",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FL_b_L",
+   "b": "FH_bot_L",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FL_b_R",
+   "b": "FH_bot_R",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FB_top_L",
+   "b": "FU_a_L",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FB_top_R",
+   "b": "FU_a_R",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FU_a_L",
+   "b": "FU_b_L",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FU_a_R",
+   "b": "FU_b_R",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FU_b_L",
+   "b": "FH_mid_L",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FU_b_R",
+   "b": "FH_mid_R",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FL_a_L",
+   "b": "FU_a_L",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FL_a_R",
+   "b": "FU_a_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FL_b_L",
+   "b": "FU_b_L",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FL_b_R",
+   "b": "FU_b_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FB_bot_L",
+   "b": "FU_a_L",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FB_bot_R",
+   "b": "FU_a_R",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FL_a_L",
+   "b": "FU_b_L",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FL_a_R",
+   "b": "FU_b_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FL_b_L",
+   "b": "FH_mid_L",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FL_b_R",
+   "b": "FH_mid_R",
+   "g": "FBS",
+   "od": 25.4
+  },
+  {
+   "a": "FL_a_L",
+   "b": "FL_a_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FL_b_L",
+   "b": "FL_b_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FBX_C",
+   "b": "FL_a_L",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FL_a_L",
+   "b": "FL_b_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FL_b_R",
+   "b": "FH_bot_L",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FH_bot_L",
+   "b": "FH_mid_L",
+   "g": "FH",
+   "od": 31.8
+  },
+  {
+   "a": "FH_bot_R",
+   "b": "FH_mid_R",
+   "g": "FH",
+   "od": 31.8
+  },
+  {
+   "a": "FH_mid_L",
+   "b": "FH_up_L",
+   "g": "FH",
+   "od": 31.8
+  },
+  {
+   "a": "FH_mid_R",
+   "b": "FH_up_R",
+   "g": "FH",
+   "od": 31.8
+  },
+  {
+   "a": "FH_up_L",
+   "b": "FH_top_L",
+   "g": "FH",
+   "od": 31.8
+  },
+  {
+   "a": "FH_up_R",
+   "b": "FH_top_R",
+   "g": "FH",
+   "od": 31.8
+  },
+  {
+   "a": "FH_top_L",
+   "b": "FH_top_C",
+   "g": "FH",
+   "od": 31.8
+  },
+  {
+   "a": "FH_top_R",
+   "b": "FH_top_C",
+   "g": "FH",
+   "od": 31.8
+  },
+  {
+   "a": "FH_bot_L",
+   "b": "FH_bot_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FH_bot_L",
+   "b": "FH_mid_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FH_up_L",
+   "b": "FH_up_R",
+   "g": "FHB",
+   "od": 25.4
+  },
+  {
+   "a": "FB_top_L",
+   "b": "FH_top_R",
+   "g": "FHB",
+   "od": 25.4
+  },
+  {
+   "a": "FH_top_L",
+   "b": "FB_top_L",
+   "g": "FHB",
+   "od": 25.4
+  },
+  {
+   "a": "FH_top_R",
+   "b": "FB_top_R",
+   "g": "FHB",
+   "od": 25.4
+  },
+  {
+   "a": "FH_bot_L",
+   "b": "LR_m_L",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "FH_bot_R",
+   "b": "LR_m_R",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "LR_m_L",
+   "b": "MH_bot_L",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "LR_m_R",
+   "b": "MH_bot_R",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "FH_mid_L",
+   "b": "SU_m_L",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "FH_mid_R",
+   "b": "SU_m_R",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "SU_m_L",
+   "b": "MH_mid_L",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "SU_m_R",
+   "b": "MH_mid_R",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "FH_bot_L",
+   "b": "SU_m_L",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "FH_bot_R",
+   "b": "SU_m_R",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "SU_m_L",
+   "b": "MH_bot_L",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "SU_m_R",
+   "b": "MH_bot_R",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "LR_m_L",
+   "b": "SU_m_L",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "LR_m_R",
+   "b": "SU_m_R",
+   "g": "SIS",
+   "od": 25.4
+  },
+  {
+   "a": "FH_up_L",
+   "b": "MH_sh_L",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "FH_up_R",
+   "b": "MH_sh_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "SU_m_L",
+   "b": "FH_up_L",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "SU_m_R",
+   "b": "FH_up_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "SU_m_L",
+   "b": "MH_sh_L",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "SU_m_R",
+   "b": "MH_sh_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "LR_m_L",
+   "b": "LRX_C",
+   "g": "LAP",
+   "od": 25.4
+  },
+  {
+   "a": "LR_m_R",
+   "b": "LRX_C",
+   "g": "LAP",
+   "od": 25.4
+  },
+  {
+   "a": "MH_bot_L",
+   "b": "MH_mid_L",
+   "g": "MH",
+   "od": 25.4
+  },
+  {
+   "a": "MH_bot_R",
+   "b": "MH_mid_R",
+   "g": "MH",
+   "od": 25.4
+  },
+  {
+   "a": "MH_mid_L",
+   "b": "MH_sh_L",
+   "g": "MH",
+   "od": 25.4
+  },
+  {
+   "a": "MH_mid_R",
+   "b": "MH_sh_R",
+   "g": "MH",
+   "od": 25.4
+  },
+  {
+   "a": "MH_sh_L",
+   "b": "MH_top_L",
+   "g": "MH",
+   "od": 25.4
+  },
+  {
+   "a": "MH_sh_R",
+   "b": "MH_top_R",
+   "g": "MH",
+   "od": 25.4
+  },
+  {
+   "a": "MH_top_L",
+   "b": "MH_top_C",
+   "g": "MH",
+   "od": 25.4
+  },
+  {
+   "a": "MH_top_R",
+   "b": "MH_top_C",
+   "g": "MH",
+   "od": 25.4
+  },
+  {
+   "a": "MH_bot_L",
+   "b": "MH_bot_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "MH_mid_L",
+   "b": "MH_mid_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "MH_bot_L",
+   "b": "MH_mid_R",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "MH_mid_R",
+   "b": "SH_L",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "MH_sh_L",
+   "b": "SH_L",
+   "g": "SHB",
+   "od": 25.4
+  },
+  {
+   "a": "MH_sh_R",
+   "b": "SH_R",
+   "g": "SHB",
+   "od": 25.4
+  },
+  {
+   "a": "SH_L",
+   "b": "SH_R",
+   "g": "SHB",
+   "od": 25.4
+  },
+  {
+   "a": "MH_top_L",
+   "b": "RU_b_L",
+   "g": "MHB",
+   "od": 25.4
+  },
+  {
+   "a": "MH_top_R",
+   "b": "RU_b_R",
+   "g": "MHB",
+   "od": 25.4
+  },
+  {
+   "a": "MH_sh_R",
+   "b": "MH_top_L",
+   "g": "SEC",
+   "od": 22.2
+  },
+  {
+   "a": "SH_L",
+   "b": "RU_a_L",
+   "g": "SHS",
+   "od": 25.4
+  },
+  {
+   "a": "SH_R",
+   "b": "RU_a_R",
+   "g": "SHS",
+   "od": 25.4
+  },
+  {
+   "a": "MH_bot_L",
+   "b": "RL_a_L",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "MH_bot_R",
+   "b": "RL_a_R",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "RL_a_L",
+   "b": "RL_b_L",
+   "g": "REAR",
+   "od": 25.4
+  },
+  {
+   "a": "RL_a_R",
+   "b": "RL_b_R",
+   "g": "REAR",
+   "od": 25.4
+  },
+  {
+   "a": "MH_mid_L",
+   "b": "RU_a_L",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "MH_mid_R",
+   "b": "RU_a_R",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "RU_a_L",
+   "b": "RU_b_L",
+   "g": "REAR",
+   "od": 25.4
+  },
+  {
+   "a": "RU_a_R",
+   "b": "RU_b_R",
+   "g": "REAR",
+   "od": 25.4
+  },
+  {
+   "a": "RL_a_L",
+   "b": "RU_a_L",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "RL_a_R",
+   "b": "RU_a_R",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "RL_b_L",
+   "b": "RU_b_L",
+   "g": "REAR",
+   "od": 25.4
+  },
+  {
+   "a": "RL_b_R",
+   "b": "RU_b_R",
+   "g": "REAR",
+   "od": 25.4
+  },
+  {
+   "a": "MH_bot_L",
+   "b": "RU_a_L",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "MH_bot_R",
+   "b": "RU_a_R",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "RL_a_L",
+   "b": "RU_b_L",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "RL_a_R",
+   "b": "RU_b_R",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "RL_a_L",
+   "b": "RL_a_R",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "RU_a_L",
+   "b": "RU_a_R",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "RL_b_L",
+   "b": "RL_b_R",
+   "g": "REAR",
+   "od": 25.4
+  },
+  {
+   "a": "RU_b_L",
+   "b": "RU_b_R",
+   "g": "REAR",
+   "od": 25.4
+  },
+  {
+   "a": "RL_b_L",
+   "b": "RU_b_R",
+   "g": "REAR",
+   "od": 25.4
+  },
+  {
+   "a": "MH_bot_L",
+   "b": "RL_a_R",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "RL_a_L",
+   "b": "RL_b_R",
+   "g": "REAR2",
+   "od": 22.2
+  },
+  {
+   "a": "FL_a_L",
+   "b": "LBJ_F_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "FL_a_R",
+   "b": "LBJ_F_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "FL_b_L",
+   "b": "LBJ_F_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "FL_b_R",
+   "b": "LBJ_F_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "FU_a_L",
+   "b": "UBJ_F_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "FU_a_R",
+   "b": "UBJ_F_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "FU_b_L",
+   "b": "UBJ_F_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "FU_b_R",
+   "b": "UBJ_F_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "FU_b_L",
+   "b": "LBJ_F_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "FU_b_R",
+   "b": "LBJ_F_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "LBJ_F_L",
+   "b": "UBJ_F_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "LBJ_F_R",
+   "b": "UBJ_F_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "LBJ_F_L",
+   "b": "WC_F_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "LBJ_F_R",
+   "b": "WC_F_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "UBJ_F_L",
+   "b": "WC_F_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "UBJ_F_R",
+   "b": "WC_F_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "FU_a_L",
+   "b": "WC_F_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "FU_a_R",
+   "b": "WC_F_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RL_a_L",
+   "b": "LBJ_R_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RL_a_R",
+   "b": "LBJ_R_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RL_b_L",
+   "b": "LBJ_R_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RL_b_R",
+   "b": "LBJ_R_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RU_a_L",
+   "b": "UBJ_R_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RU_a_R",
+   "b": "UBJ_R_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RU_b_L",
+   "b": "UBJ_R_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RU_b_R",
+   "b": "UBJ_R_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RU_a_L",
+   "b": "LBJ_R_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RU_a_R",
+   "b": "LBJ_R_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "LBJ_R_L",
+   "b": "UBJ_R_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "LBJ_R_R",
+   "b": "UBJ_R_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "LBJ_R_L",
+   "b": "WC_R_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "LBJ_R_R",
+   "b": "WC_R_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "UBJ_R_L",
+   "b": "WC_R_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "UBJ_R_R",
+   "b": "WC_R_R",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RL_b_L",
+   "b": "WC_R_L",
+   "g": "SUSP",
+   "od": 60.0
+  },
+  {
+   "a": "RL_b_R",
+   "b": "WC_R_R",
+   "g": "SUSP",
+   "od": 60.0
+  }
+ ],
+ "groups": {
+  "MH": {
+   "name": "메인 롤후프",
+   "color": "#d62728",
+   "tube": "Ø25.4×2.3",
+   "cls": "hoop"
+  },
+  "FH": {
+   "name": "전방 롤후프",
+   "color": "#ff7f0e",
+   "tube": "Ø31.8×2",
+   "cls": "hoop"
+  },
+  "SHB": {
+   "name": "어깨벨트 바",
+   "color": "#8c564b",
+   "tube": "Ø25.4×2.3",
+   "cls": "hoop"
+  },
+  "MHB": {
+   "name": "메인 롤후프 지지대",
+   "color": "#e377c2",
+   "tube": "Ø25.4×1.6",
+   "cls": "primary"
+  },
+  "SHS": {
+   "name": "어깨벨트 바 지지",
+   "color": "#f7b6d2",
+   "tube": "Ø25.4×1.6",
+   "cls": "primary"
+  },
+  "FHB": {
+   "name": "전방 롤후프 지지대",
+   "color": "#bcbd22",
+   "tube": "Ø25.4×1.6",
+   "cls": "primary"
+  },
+  "SIS": {
+   "name": "측면 충격구조",
+   "color": "#1f77b4",
+   "tube": "Ø25.4×1.6",
+   "cls": "primary"
+  },
+  "LAP": {
+   "name": "랩·안티서브 벨트 가로재",
+   "color": "#aec7e8",
+   "tube": "Ø25.4×1.6",
+   "cls": "primary"
+  },
+  "FBH": {
+   "name": "전방 벌크헤드",
+   "color": "#2ca02c",
+   "tube": "Ø25.4×1.6",
+   "cls": "primary"
+  },
+  "FBS": {
+   "name": "전방 벌크헤드 지지",
+   "color": "#17becf",
+   "tube": "Ø25.4×1.6",
+   "cls": "primary"
+  },
+  "REAR": {
+   "name": "후방 벌크헤드·후방 지지",
+   "color": "#9467bd",
+   "tube": "Ø25.4×1.6",
+   "cls": "primary"
+  },
+  "REAR2": {
+   "name": "후방 프레임(모터 베이)",
+   "color": "#c5b0d5",
+   "tube": "Ø22.2×1.2",
+   "cls": "secondary"
+  },
+  "SEC": {
+   "name": "기타 프레임재",
+   "color": "#7f7f7f",
+   "tube": "Ø22.2×1.2",
+   "cls": "secondary"
+  },
+  "SUSP": {
+   "name": "서스펜션 링크(해석용 강체)",
+   "color": "#c7c7c7",
+   "tube": "Ø60×10",
+   "cls": "rigid"
+  }
+ },
+ "driver": {
+  "hip": [
+   678.4,
+   190.0
+  ],
+  "shoulder": [
+   923.4,
+   614.4
+  ],
+  "head": [
+   1063.4,
+   856.8
+  ],
+  "knee": [
+   264.5,
+   470.6
+  ],
+  "heel": [
+   -180.0,
+   130.0
+  ],
+  "r_hip": 100.0,
+  "r_shoulder": 100.0,
+  "r_head": 150.0
+ },
+ "params": {
+  "wheelbase": 1550.0,
+  "track_f": 1200.0,
+  "track_r": 1150.0,
+  "tire_d": 520.0,
+  "tire_w": 203.0,
+  "z_floor": 65.0,
+  "z_sis": 330.0,
+  "x_fb": -430.0,
+  "fb_half_w_bot": 160.0,
+  "fb_half_w_top": 140.0,
+  "z_fb_top": 380.0,
+  "x_fs_a": -130.0,
+  "x_fs_b": 130.0,
+  "x_fh": 380.0,
+  "fh_half_w": 255.0,
+  "z_fh_up": 540.0,
+  "fh_half_w_up": 235.0,
+  "z_fh_top_corner": 740.0,
+  "fh_half_w_top": 160.0,
+  "z_fh_top": 760.0,
+  "x_cp_mid": 770.0,
+  "x_mh": 1290.0,
+  "mh_half_w": 285.0,
+  "z_shb": 600.0,
+  "mh_half_w_shb": 280.0,
+  "z_mhb_attach": 1180.0,
+  "z_mh_top_corner": 1180.0,
+  "mh_half_w_top": 160.0,
+  "z_mh_top": 1200.0,
+  "shoulder_mount_half": 95.0,
+  "x_rs_a": 1450.0,
+  "x_rb": 1740.0,
+  "rr_half_w_a": 250.0,
+  "rr_half_w_b": 210.0,
+  "z_rr_up_a": 340.0,
+  "z_rr_up_b": 420.0,
+  "front_top_diag": true,
+  "dash_bar": true,
+  "mh_upper_diag": true,
+  "mh_head_diag": true,
+  "shb_support": true,
+  "rear_top_diag": false,
+  "cockpit_floor_x": false,
+  "lbj_in": 70.0,
+  "ubj_in": 90.0,
+  "z_lbj": 140.0,
+  "z_ubj": 390.0,
+  "bumper_f": 150.0,
+  "bumper_r": 150.0,
+  "pedal_face_x": -230.0,
+  "pedal_face_z": 300.0,
+  "hip_z": 190.0,
+  "recline_deg": 30.0,
+  "sw_x": 450.0,
+  "sw_z": 610.0,
+  "sw_r": 125.0,
+  "headrest_gap": 70.0
+ },
+ "summary": {
+  "frame_mass_kg": 41.86,
+  "torsional_stiffness_Nm_per_deg": 2186,
+  "vehicle_mass_kg": 248.9,
+  "front_weight_pct": 41.5,
+  "frame_envelope_mm": {
+   "length": 2170,
+   "width": 570,
+   "height": 1200
+  }
+ }
+}

@@ -1,0 +1,643 @@
+{
+ "material": "STKM13C (KS D 3517)",
+ "tubes": {
+  "메인 롤후프": "Ø25.4×2.3",
+  "전방 롤후프": "Ø31.8×2",
+  "어깨벨트 바": "Ø25.4×2.3",
+  "메인 롤후프 지지대": "Ø25.4×1.6",
+  "어깨벨트 바 지지": "Ø25.4×1.6",
+  "전방 롤후프 지지대": "Ø25.4×1.6",
+  "측면 충격구조": "Ø25.4×1.6",
+  "랩·안티서브 벨트 가로재": "Ø25.4×1.6",
+  "전방 벌크헤드": "Ø25.4×1.6",
+  "전방 벌크헤드 지지": "Ø25.4×1.6",
+  "후방 벌크헤드·후방 지지": "Ø25.4×1.6",
+  "후방 프레임(모터 베이)": "Ø22.2×1.2",
+  "기타 프레임재": "Ø22.2×1.2"
+ },
+ "frame_mass_tubes_kg": 38.05,
+ "frame_mass_kg": 41.86,
+ "vehicle_mass_kg": 248.9,
+ "cg_mm": [
+  907.0,
+  -0.1,
+  210.5
+ ],
+ "front_weight_pct": 41.5,
+ "torsional_stiffness_Nm_per_deg": 2186,
+ "stiffness_per_mass": 52.2,
+ "frame_envelope_mm": {
+  "length": 2170,
+  "width": 570,
+  "height": 1200
+ },
+ "members": 112,
+ "nodes": 46,
+ "load_cases": [
+  {
+   "key": "torsion",
+   "name": "비틀림 강성",
+   "kind": "stiffness",
+   "note": "앞바퀴 중심 ±1000 N(우력 1200 N·m), 뒷바퀴 중심 핀 고정, 서스펜션은 축력 강체 링크(댐퍼 잠금)",
+   "max_disp_mm": 3.65,
+   "max_disp_node": "FH_top_L",
+   "min_sf": 2.18,
+   "min_sf_member": "FU_b_R-FH_mid_R",
+   "min_sf_group": "전방 벌크헤드 지지",
+   "max_vm_mpa": 174.5,
+   "max_buckling_util": 0.117,
+   "max_buckling_member": "FB_top_L-FH_top_R",
+   "torsional_stiffness_Nm_per_deg": 2186.0,
+   "twist_distribution": [
+    {
+     "station": "FB_bot",
+     "x": -430,
+     "twist_deg": 0.4251
+    },
+    {
+     "station": "FL_a",
+     "x": -130,
+     "twist_deg": 0.3971
+    },
+    {
+     "station": "FL_b",
+     "x": 130,
+     "twist_deg": 0.3686
+    },
+    {
+     "station": "FH_bot",
+     "x": 380,
+     "twist_deg": 0.3261
+    },
+    {
+     "station": "LR_m",
+     "x": 770,
+     "twist_deg": 0.2191
+    },
+    {
+     "station": "MH_bot",
+     "x": 1290,
+     "twist_deg": 0.067
+    },
+    {
+     "station": "RL_a",
+     "x": 1450,
+     "twist_deg": 0.041
+    },
+    {
+     "station": "RL_b",
+     "x": 1740,
+     "twist_deg": -0.0139
+    }
+   ]
+  },
+  {
+   "key": "bending_1g",
+   "name": "정적 1 g 굽힘",
+   "kind": "stiffness",
+   "note": "스프링 상질량 + 프레임 자중, 네 바퀴 중심 핀 지지",
+   "max_disp_mm": 0.18,
+   "max_disp_node": "LRX_C",
+   "min_sf": 22.5,
+   "min_sf_member": "LR_m_L-LRX_C",
+   "min_sf_group": "랩·안티서브 벨트 가로재",
+   "max_vm_mpa": 16.9,
+   "max_buckling_util": 0.016,
+   "max_buckling_member": "FH_up_L-MH_sh_L"
+  },
+  {
+   "key": "bump_3g",
+   "name": "범프 3 g",
+   "kind": "operating",
+   "note": "수직 3 g (노면 충격), 네 바퀴 중심 핀 지지",
+   "max_disp_mm": 0.54,
+   "max_disp_node": "LRX_C",
+   "min_sf": 7.5,
+   "min_sf_member": "LR_m_L-LRX_C",
+   "min_sf_group": "랩·안티서브 벨트 가로재",
+   "max_vm_mpa": 50.7,
+   "max_buckling_util": 0.047,
+   "max_buckling_member": "FH_up_L-MH_sh_L"
+  },
+  {
+   "key": "brake_corner",
+   "name": "제동 1.5 g + 선회 1.5 g + 1 g",
+   "kind": "operating",
+   "note": "관성력: 앞(-X) 1.5 g, 좌(+Y) 1.5 g, 수직 1 g",
+   "max_disp_mm": 0.84,
+   "max_disp_node": "LRX_C",
+   "min_sf": 6.04,
+   "min_sf_member": "FH_bot_L-LR_m_L",
+   "min_sf_group": "측면 충격구조",
+   "max_vm_mpa": 62.9,
+   "max_buckling_util": 0.05,
+   "max_buckling_member": "RL_a_R-RU_b_R"
+  },
+  {
+   "key": "main_hoop",
+   "name": "메인 롤후프(전복)",
+   "kind": "crash",
+   "note": "후프 상단 Fx 6 kN(후방), Fy 5 kN, Fz -9 kN — FSAE SES 관례값. 상단 직선부(모서리 1/4·1/4, 중앙 1/2)에 분포, 메인·전방 후프 하단 변위 고정",
+   "max_disp_mm": 5.49,
+   "max_disp_node": "MH_top_C",
+   "min_sf": 1.11,
+   "min_sf_member": "MH_top_L-MH_top_C",
+   "min_sf_group": "메인 롤후프",
+   "max_vm_mpa": 343.0,
+   "max_buckling_util": 0.26,
+   "max_buckling_member": "MH_top_R-RU_b_R"
+  },
+  {
+   "key": "front_hoop",
+   "name": "전방 롤후프(전복)",
+   "kind": "crash",
+   "note": "메인 롤후프와 같은 하중·분포·구속",
+   "max_disp_mm": 4.04,
+   "max_disp_node": "FH_top_R",
+   "min_sf": 1.06,
+   "min_sf_member": "FH_mid_R-FH_up_R",
+   "min_sf_group": "전방 롤후프",
+   "max_vm_mpa": 359.7,
+   "max_buckling_util": 0.188,
+   "max_buckling_member": "FH_bot_L-FH_mid_R"
+  },
+  {
+   "key": "side_impact",
+   "name": "측면 충돌 7 kN",
+   "kind": "crash",
+   "note": "왼쪽 측면충격구조에 7 kN(FSAE SES 관례), 반대쪽 서스펜션 마운트 고정",
+   "max_disp_mm": 5.41,
+   "max_disp_node": "SU_m_L",
+   "min_sf": 1.32,
+   "min_sf_member": "SU_m_L-FH_up_L",
+   "min_sf_group": "기타 프레임재",
+   "max_vm_mpa": 287.3,
+   "max_buckling_util": 0.12,
+   "max_buckling_member": "FL_b_R-FH_bot_L"
+  },
+  {
+   "key": "front_impact",
+   "name": "전면 충돌 20 g (48.8 kN)",
+   "kind": "crash",
+   "note": "차량 249 kg × 20 g 를 범퍼 마운트(벌크헤드 4점)에 입력, 메인 후프 하단·지지대 결합부 고정(보수적)",
+   "max_disp_mm": 5.69,
+   "max_disp_node": "FB_top_R",
+   "min_sf": 1.44,
+   "min_sf_member": "MH_mid_R-RU_a_R",
+   "min_sf_group": "후방 프레임(모터 베이)",
+   "max_vm_mpa": 263.8,
+   "max_buckling_util": 0.193,
+   "max_buckling_member": "SU_m_R-MH_mid_R"
+  },
+  {
+   "key": "rear_impact",
+   "name": "후면 충돌 20 g (48.8 kN)",
+   "kind": "crash",
+   "note": "후면 범퍼 마운트(후방 벌크헤드 4점) 입력, 메인 후프 하부 고정",
+   "max_disp_mm": 1.86,
+   "max_disp_node": "MH_top_C",
+   "min_sf": 1.62,
+   "min_sf_member": "MH_mid_L-RU_a_L",
+   "min_sf_group": "후방 프레임(모터 베이)",
+   "max_vm_mpa": 234.0,
+   "max_buckling_util": 0.086,
+   "max_buckling_member": "RU_a_R-RU_b_R"
+  },
+  {
+   "key": "harness",
+   "name": "6점식 벨트 하중 (17.7 kN)",
+   "kind": "crash",
+   "note": "드라이버 90 kg × 20 g: 어깨 2×20 %, 랩 2×25 %, 안티서브 10 % (벨트 방향), 반력은 전방 벌크헤드(범퍼)",
+   "max_disp_mm": 6.98,
+   "max_disp_node": "RU_b_L",
+   "min_sf": 1.43,
+   "min_sf_member": "SH_L-SH_R",
+   "min_sf_group": "어깨벨트 바",
+   "max_vm_mpa": 266.6,
+   "max_buckling_util": 0.136,
+   "max_buckling_member": "FH_up_R-MH_sh_R"
+  }
+ ],
+ "checks": [
+  {
+   "item": "휠베이스",
+   "value": 1550.0,
+   "criterion": "≥ 1500",
+   "ok": true,
+   "rule": "wheelbase_min",
+   "unit": "mm"
+  },
+  {
+   "item": "타이어 폭(가정 타이어)",
+   "value": 203.0,
+   "criterion": "≥ 200",
+   "ok": true,
+   "rule": "tire_width_min",
+   "unit": "mm"
+  },
+  {
+   "item": "튜브 규격 · 메인 롤후프",
+   "value": "Ø25.4×2.3",
+   "criterion": "≥ Ø25×1.8",
+   "ok": true,
+   "rule": "hoop_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 전방 롤후프",
+   "value": "Ø31.8×2",
+   "criterion": "≥ Ø25×1.8",
+   "ok": true,
+   "rule": "hoop_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 어깨벨트 바",
+   "value": "Ø25.4×2.3",
+   "criterion": "≥ Ø25×1.8",
+   "ok": true,
+   "rule": "hoop_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 메인 롤후프 지지대",
+   "value": "Ø25.4×1.6",
+   "criterion": "≥ Ø25×1.6",
+   "ok": true,
+   "rule": "primary_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 어깨벨트 바 지지",
+   "value": "Ø25.4×1.6",
+   "criterion": "≥ Ø25×1.6",
+   "ok": true,
+   "rule": "primary_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 전방 롤후프 지지대",
+   "value": "Ø25.4×1.6",
+   "criterion": "≥ Ø25×1.6",
+   "ok": true,
+   "rule": "primary_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 측면 충격구조",
+   "value": "Ø25.4×1.6",
+   "criterion": "≥ Ø25×1.6",
+   "ok": true,
+   "rule": "primary_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 랩·안티서브 벨트 가로재",
+   "value": "Ø25.4×1.6",
+   "criterion": "≥ Ø25×1.6",
+   "ok": true,
+   "rule": "primary_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 전방 벌크헤드",
+   "value": "Ø25.4×1.6",
+   "criterion": "≥ Ø25×1.6",
+   "ok": true,
+   "rule": "primary_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 전방 벌크헤드 지지",
+   "value": "Ø25.4×1.6",
+   "criterion": "≥ Ø25×1.6",
+   "ok": true,
+   "rule": "primary_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 후방 벌크헤드·후방 지지",
+   "value": "Ø25.4×1.6",
+   "criterion": "≥ Ø25×1.6",
+   "ok": true,
+   "rule": "primary_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 후방 프레임(모터 베이)",
+   "value": "Ø22.2×1.2",
+   "criterion": "≥ Ø20×1.2",
+   "ok": true,
+   "rule": "secondary_t_min",
+   "unit": ""
+  },
+  {
+   "item": "튜브 규격 · 기타 프레임재",
+   "value": "Ø22.2×1.2",
+   "criterion": "≥ Ø20×1.2",
+   "ok": true,
+   "rule": "secondary_t_min",
+   "unit": ""
+  },
+  {
+   "item": "재료 항복강도",
+   "value": 380.0,
+   "criterion": "≥ 285",
+   "ok": true,
+   "rule": "yield_min",
+   "unit": "MPa"
+  },
+  {
+   "item": "재료 인장강도",
+   "value": 510.0,
+   "criterion": "≥ 360",
+   "ok": true,
+   "rule": "tensile_min",
+   "unit": "MPa"
+  },
+  {
+   "item": "헬멧 ~ 롤후프 연결선 여유",
+   "value": 60.3,
+   "criterion": "≥ 50.8",
+   "ok": true,
+   "rule": "helmet_clearance",
+   "unit": "mm"
+  },
+  {
+   "item": "헬멧 뒤 ~ 메인 후프 앞면 (헤드레스트 공간)",
+   "value": 63.9,
+   "criterion": "≥ 40 (패드+간격, 자체)",
+   "ok": true,
+   "rule": null,
+   "unit": "mm"
+  },
+  {
+   "item": "메인 후프 상단 - 헬멧 상단",
+   "value": 193.2,
+   "criterion": "> 0",
+   "ok": true,
+   "rule": null,
+   "unit": "mm"
+  },
+  {
+   "item": "메인 후프-지지대 각도(측면도)",
+   "value": 30.6,
+   "criterion": "≥ 30",
+   "ok": true,
+   "rule": "mhb_angle_min",
+   "unit": "deg"
+  },
+  {
+   "item": "지지대 부착점 ~ 후프 최상단",
+   "value": 32.7,
+   "criterion": "≤ 160",
+   "ok": true,
+   "rule": "mhb_attach_max",
+   "unit": "mm"
+  },
+  {
+   "item": "전방 후프 상단 - 스티어링 휠 상단",
+   "value": 25.0,
+   "criterion": "≥ 0",
+   "ok": true,
+   "rule": null,
+   "unit": "mm"
+  },
+  {
+   "item": "전방 후프가 휠보다 앞선 거리",
+   "value": 70.0,
+   "criterion": "≤ 250",
+   "ok": true,
+   "rule": "fh_to_sw_max",
+   "unit": "mm"
+  },
+  {
+   "item": "무릎 상단(+60) ~ 전방 후프 상단",
+   "value": 229.4,
+   "criterion": "> 0",
+   "ok": true,
+   "rule": null,
+   "unit": "mm"
+  },
+  {
+   "item": "무릎 ~ 프레임 튜브 최소 간격 [FH_up_L-FH_up_R]",
+   "value": 62.0,
+   "criterion": "≥ 25 (자체)",
+   "ok": true,
+   "rule": null,
+   "unit": "mm"
+  },
+  {
+   "item": "헬멧 ~ 프레임 튜브 최소 간격 [MH_sh_R-MH_top_L]",
+   "value": 75.5,
+   "criterion": "≥ 25 (자체)",
+   "ok": true,
+   "rule": null,
+   "unit": "mm"
+  },
+  {
+   "item": "어깨벨트 각도(수평 기준, +위)",
+   "value": -2.2,
+   "criterion": "-20 ~ +10",
+   "ok": true,
+   "rule": "shoulder_angle_up",
+   "unit": "deg"
+  },
+  {
+   "item": "어깨벨트 마운트 간격",
+   "value": 190.0,
+   "criterion": "178 ~ 229",
+   "ok": true,
+   "rule": "shoulder_spacing_min",
+   "unit": "mm"
+  },
+  {
+   "item": "랩벨트 각도(측면도)",
+   "value": 53.8,
+   "criterion": "45 ~ 65",
+   "ok": true,
+   "rule": "lap_angle_min",
+   "unit": "deg"
+  },
+  {
+   "item": "프레임 최저지상고",
+   "value": 52.3,
+   "criterion": "≥ 40",
+   "ok": true,
+   "rule": "ground_clearance_min",
+   "unit": "mm"
+  },
+  {
+   "item": "6점식 벨트 마운트 노드(어깨2·랩2·안티서브)",
+   "value": "있음",
+   "criterion": "필수",
+   "ok": true,
+   "rule": "harness_points",
+   "unit": ""
+  },
+  {
+   "item": "전·후면 범퍼(충격완화장치) 마운트면",
+   "value": "전방/후방 벌크헤드",
+   "criterion": "필수",
+   "ok": true,
+   "rule": "bumper_absorber",
+   "unit": ""
+  },
+  {
+   "item": "해석 · 범프 3 g 안전율",
+   "value": 7.5,
+   "criterion": "≥ 1.5 (좌굴 이용률 ≤ 0.67)",
+   "ok": true,
+   "rule": "sf_operating",
+   "unit": "-"
+  },
+  {
+   "item": "해석 · 제동 1.5 g + 선회 1.5 g + 1 g 안전율",
+   "value": 6.04,
+   "criterion": "≥ 1.5 (좌굴 이용률 ≤ 0.67)",
+   "ok": true,
+   "rule": "sf_operating",
+   "unit": "-"
+  },
+  {
+   "item": "해석 · 메인 롤후프(전복) 안전율",
+   "value": 1.11,
+   "criterion": "≥ 1 (좌굴 이용률 ≤ 1)",
+   "ok": true,
+   "rule": "sf_crash",
+   "unit": "-"
+  },
+  {
+   "item": "해석 · 메인 롤후프(전복) 최대 변위",
+   "value": 5.49,
+   "criterion": "≤ 25",
+   "ok": true,
+   "rule": "hoop_deflection_max",
+   "unit": "mm"
+  },
+  {
+   "item": "해석 · 전방 롤후프(전복) 안전율",
+   "value": 1.06,
+   "criterion": "≥ 1 (좌굴 이용률 ≤ 1)",
+   "ok": true,
+   "rule": "sf_crash",
+   "unit": "-"
+  },
+  {
+   "item": "해석 · 전방 롤후프(전복) 최대 변위",
+   "value": 4.04,
+   "criterion": "≤ 25",
+   "ok": true,
+   "rule": "hoop_deflection_max",
+   "unit": "mm"
+  },
+  {
+   "item": "해석 · 측면 충돌 7 kN 안전율",
+   "value": 1.32,
+   "criterion": "≥ 1 (좌굴 이용률 ≤ 1)",
+   "ok": true,
+   "rule": "sf_crash",
+   "unit": "-"
+  },
+  {
+   "item": "해석 · 측면 충돌 7 kN 최대 변위",
+   "value": 5.41,
+   "criterion": "≤ 25",
+   "ok": true,
+   "rule": "hoop_deflection_max",
+   "unit": "mm"
+  },
+  {
+   "item": "해석 · 전면 충돌 20 g (48.8 kN) 안전율",
+   "value": 1.44,
+   "criterion": "≥ 1 (좌굴 이용률 ≤ 1)",
+   "ok": true,
+   "rule": "sf_crash",
+   "unit": "-"
+  },
+  {
+   "item": "해석 · 후면 충돌 20 g (48.8 kN) 안전율",
+   "value": 1.62,
+   "criterion": "≥ 1 (좌굴 이용률 ≤ 1)",
+   "ok": true,
+   "rule": "sf_crash",
+   "unit": "-"
+  },
+  {
+   "item": "해석 · 6점식 벨트 하중 (17.7 kN) 안전율",
+   "value": 1.43,
+   "criterion": "≥ 1 (좌굴 이용률 ≤ 1)",
+   "ok": true,
+   "rule": "sf_crash",
+   "unit": "-"
+  },
+  {
+   "item": "해석 · 비틀림 강성",
+   "value": 2186,
+   "criterion": "≥ 1500",
+   "ok": true,
+   "rule": "torsion_target",
+   "unit": "N·m/deg"
+  },
+  {
+   "item": "프레임 질량(용접·탭 +10 %)",
+   "value": 41.9,
+   "criterion": "≤ 35",
+   "ok": false,
+   "rule": "frame_mass_target",
+   "unit": "kg"
+  }
+ ],
+ "bom": [
+  {
+   "tube": "Ø31.8×2",
+   "pieces": 8,
+   "length_m": 1.7,
+   "mass_kg": 2.5,
+   "stock_bars_6m": 1
+  },
+  {
+   "tube": "Ø25.4×2.3",
+   "pieces": 11,
+   "length_m": 3.14,
+   "mass_kg": 4.11,
+   "stock_bars_6m": 1
+  },
+  {
+   "tube": "Ø25.4×1.6",
+   "pieces": 55,
+   "length_m": 22.26,
+   "mass_kg": 20.9,
+   "stock_bars_6m": 5
+  },
+  {
+   "tube": "Ø22.2×1.2",
+   "pieces": 38,
+   "length_m": 16.96,
+   "mass_kg": 10.54,
+   "stock_bars_6m": 4
+  }
+ ],
+ "driver": {
+  "hip": [
+   678.4,
+   190.0
+  ],
+  "shoulder": [
+   923.4,
+   614.4
+  ],
+  "head": [
+   1063.4,
+   856.8
+  ],
+  "knee": [
+   264.5,
+   470.6
+  ],
+  "heel": [
+   -180.0,
+   130.0
+  ]
+ }
+}
